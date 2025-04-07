@@ -66,14 +66,16 @@ extractor_agent = AssistantAgent(
     name="PDFExtractorAgent",
     llm_config=llm_config,
     system_message="""
-You are a document analysis assistant. Your job is to extract structured data from PDF invoices.
-Return ONLY the following as a JSON:
-{
-    "company_name": "...",
-    "document_type": "...",
-    "corporate_info": "..."
-}
-If data is missing, use null.
+You are an intelligent document analyzer.
+
+Your task is to extract the core subjects or key topics discussed in the document.
+
+Only return a concise list of subject keywords or topics that represent the document's content. Do not summarize or explain them.
+
+The list must be specific, context-aware, and ordered by relevance if possible.
+
+Output format: [subject1, subject2, subject3, ...]
+
 """
 )
 

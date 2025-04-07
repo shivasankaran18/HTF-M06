@@ -1,3 +1,4 @@
 fastapi
 autogen
 PyPDF2
+uvicorn

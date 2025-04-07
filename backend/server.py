@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from controllers import analysisFolder as analyze_folder
+from controllers.getFolderAnalysis.handler import analysisFolder as analyze_folder
 
 app = FastAPI()
 
@@ -7,6 +7,8 @@ app = FastAPI()
 def read_root():
     return {"Hello": "World"}
 
-@app.get("/getrecordsstored/{folder_path}")
-def analysisFolder(folder_path):
-    analyze_folder(folder_path)
+@app.route('/getfileinfo', methods=['POST'])
+def analysisFolder():
+    data=request.get_json()
+    print(data)
+    analyze_folder(data)
