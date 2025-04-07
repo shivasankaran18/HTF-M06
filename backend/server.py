@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from controllers import analysisFolder as analyze_folder
+from controllers.getFolderAnalysis.handler import analysisFolder as analyze_folder
 
 app = FastAPI()
 
