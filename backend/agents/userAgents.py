@@ -32,12 +32,7 @@ Only return a concise list of subject keywords or topics that represent the docu
 
 The list must be specific, context-aware, and ordered by relevance if possible.
 
-Output format:
-- Subject 1
-- Subject 2
-- Subject 3
-...
-
+Output format: [subject1, subject2, subject3, ...]
 """
 )
 
@@ -76,3 +71,4 @@ Extract structured invoice data from the following PDF text:
 if __name__ == "__main__":
     pdf_file = "invoice_sample.pdf"
     analyze_pdf_invoice(pdf_file)
+
