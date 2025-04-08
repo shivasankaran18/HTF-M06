@@ -60,12 +60,15 @@ def analysisFolder(folder_path):
                     except Exception as e:
                         print(f"Error processing {full_path} : {e}")
                         
-def fn(path):
-    result = analyze_pdf(path)
-    if(get_from_redis(path) == None):
-        print(f"Analyzing: {path}")
-        try:
-            add_to_redis(path, result)
-        except Exception as e:
-                        print(f"Error processing {path}: {e}")
+# def fn(path):
+#     result = analyze_pdf(path)
+#     if(get_from_redis(path) == None):
+#         print(f"Analyzing: {path}")
+#         try:
+#             add_to_redis(path, result)
+#         except Exception as e:
+#                         print(f"Error processing {path}: {e}")
 
+def analyzeFiles(data):
+    for file in data['files']:
+        
