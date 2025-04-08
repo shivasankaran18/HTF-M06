@@ -82,20 +82,42 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
     setShowFileSelector(false);
     setIsSubmitting(true);
     console.log(input)
-
+    var feedbackRating;
+    if(feedbackHistory[feedbackHistory.length - 1].rating == "like"){
+      feedbackRating = 1;
+    } else if(feedbackHistory[feedbackHistory.length - 1].rating == "neutral"){
+      feedbackRating = 0;
+    } else {
+      feedbackRating = -1;
+    }
     try {
-      const response = await axios.post("http://localhost:8000/getuserquery", {
-        data: input  
-      });
-
-      const botMessage: Message = {
-        text: response.data.response,  
-        isUser: false,
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, botMessage]);
-      
-      // Increment the user interaction count after successful response
+      const files = selectedFiles.map(file => ({
+        name: file.name,
+      }));
+      if(selectedFiles.length > 0){
+        const response = await axios.post("http://localhost:8000/getspecificfileinfo", {
+          data: input,
+          files: files,
+          feedback: feedbackRating
+        });
+        const botMessage: Message = {
+          text: response.data.response,  
+          isUser: false,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, botMessage]);
+      } else {
+        const response = await axios.post("http://localhost:8000/getuserquery", {
+          data: input,
+          feedback: feedbackRating
+        });
+        const botMessage: Message = {
+          text: response.data.response,  
+          isUser: false,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, botMessage]);
+      }
       setUserInteractionCount(prev => prev + 1);
     } catch (error) {
       console.error('Error sending message:', error);

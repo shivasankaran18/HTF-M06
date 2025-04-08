@@ -6,23 +6,26 @@ import UploadPage from './pages/UploadPage';
 import ChatPage from './pages/ChatPage';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import { AuthProvider } from './utils/AuthContext';
 
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-[#FFFDF2]">
-        <Toaster position="top-right" />
-        <AnimatePresence mode="wait">
-          <Routes>
-            <Route path="/" element={<Navigate to="/login" replace />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/upload" element={<UploadPage />} />
-            <Route path="/chat" element={<ChatPage />} />
-          </Routes>
-        </AnimatePresence>
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="min-h-screen bg-[#FFFDF2]">
+          <Toaster position="top-right" />
+          <AnimatePresence mode="wait">
+            <Routes>
+              <Route path="/" element={<Navigate to="/login" replace />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/upload" element={<UploadPage />} />
+              <Route path="/chat" element={<ChatPage />} />
+            </Routes>
+          </AnimatePresence>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

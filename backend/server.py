@@ -2,7 +2,6 @@ from fastapi import FastAPI,Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from controllers.getFolderAnalysis.handler import analysisFolder as analyze_folder
-from controllers.getFolderAnalysis.handler import fn
 from agents.userAgent import handle_user_query
 from controllers.getFolderAnalysis.handler import get_file_info
 import asyncio
