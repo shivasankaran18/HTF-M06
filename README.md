@@ -6,6 +6,11 @@ Welcome to the repository for **HTF-M06**, an intelligent agentic system designe
 This project leverages LLM-based agents, embeddings, reinforcement learning, and Redis-backed storage to deliver **accurate, feedback-driven document query resolution**.
 
 ---
+## Architecture Diagram
+
+![image](https://github.com/user-attachments/assets/8dd8d084-fa40-4abd-a44c-be0362741b55)
+
+---
 
 ## 🚀 Features
 
