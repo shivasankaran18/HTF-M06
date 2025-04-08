@@ -4,7 +4,7 @@ import redis
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-from Redis_Client import get_from_redis, redis_client
+from Redis_Client import add_to_redis, get_from_redis, redis_client
 import json
 import os
 from langchain_community.embeddings import OllamaEmbeddings

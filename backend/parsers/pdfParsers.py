@@ -2,12 +2,18 @@ import os
 from autogen import AssistantAgent, UserProxyAgent
 from PyPDF2 import PdfReader
 from agents.keyWordAgent import keyword_extractor_agent,user_proxy
+from dotenv import load_dotenv
+
+load_dotenv()
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+
 llm_config = {
-"model": "gemma2-9b-it",
-    "api_key": "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",
-    "base_url": "https://api.groq.com/openai/v1",
-    "temperature": 0.3,
+    "model": "gemma2-9b-it",
+    "api_key": GROQ_API_KEY,
+        "base_url": "https://api.groq.com/openai/v1",
+        "temperature": 0.3,
 }
+
 def extract_text_from_pdf(pdf_path):
     reader = PdfReader(pdf_path)
     text = ""

@@ -305,24 +305,6 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
                 </div>
               </motion.div>
             ))}
-            {/* {isLoading && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex justify-start mb-4"
-              >
-                <div className="space-y-2 max-w-[80%]">
-                  <motion.div
-                    className="rounded-2xl px-4 py-2 bg-gradient-to-r from-gray-100 to-teal-100 text-gray-800"
-                  >
-                    <div className="flex items-center gap-2">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-teal-500"></div>
-                      <span>Thinking...</span>
-                    </div>
-                  </motion.div>
-                </div>
-              </motion.div>
-            )} */}
             <div ref={chatEndRef} />
           </AnimatePresence>
         </div>
