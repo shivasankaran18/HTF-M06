@@ -28,7 +28,9 @@ Your responsibilities:
 
 Rules:
 - Return a clean Python list of relevant **keywords only**. Example:
-  [ "invoice", "company-name", "project-title", "gst", "delivery-date" ]
+  ["invoice","company name", "file subject",.....]
+- The List only should be of this type
+- The list should be of length maximum 6.. Don't make lists that are more than 6 length 
 - Do NOT include any explanations or full sentences.
 - Use only **lowercase**, hyphen-separated tokens if needed.
 - Avoid generic or non-informative words.

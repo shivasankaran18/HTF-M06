@@ -175,23 +175,26 @@ def get_file_info(data):
     
     # Process each file based on its type
     for file_path in files:
+        print(files)
+        print(file_path)
+        print(f"Processing file: {file_path['name']}")
         try:
-            file_ext = os.path.splitext(file_path)[1].lower()
             content = None
-            
-            if file_ext == '.pdf':
+            file_path = "documentRepo/" + file_path['name']
+            if file_path.endswith('.pdf'):
                 loader = PyPDFLoader(file_path)
                 pages = loader.load()
+                print(pages)
                 docs = text_splitter.split_documents(pages)
                 db = FAISS.from_documents(docs, embeddings)
                 retriever = db.as_retriever()
                 result = retriever.invoke(userPrompt)
                 content = result[0].page_content if result else None
                 
-            elif file_ext == '.docx':
+            elif file_path == '.docx':
                 content = extract_text_from_docx(file_path)
                 
-            elif file_ext in ['.jpg', '.png', '.jpeg']:
+            elif file_path in ['.jpg', '.png', '.jpeg']:
                 content = extract_text(file_path)
             
             if content:
