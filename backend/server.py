@@ -34,17 +34,11 @@ def read_root():
 @app.post("/getuserquery")
 async def getuserquery(request: Request):
     data=await request.json()
-<<<<<<< HEAD
-    print(data)
-    response= handle_user_query(data)
-    await asyncio.sleep(1)
-    if("more than" in data['data']):
-        return JSONResponse(content={"status": "success", "result": "Query processed successfully","response":'''Regarding your request to fetch invoices where the total amount exceeds $150 — I've reviewed the records and found that the invoices from Flipkart and Azure Interior meet the criteria. Both of these invoices have totals greater than $150, with Azure Interior's invoice totaling $279.84. Let me know if you need the files or any additional details from them.
-
-        '''})
-=======
     print(data['data'])
-    response= handle_user_query(data['data'])
+    if('feedback' not in data):
+        data['feedback'] = 0
+    response= handle_user_query(data)
+
     # await asyncio.sleep(1)
     # if("more than" in data['data']):
         # return JSONResponse(content={"status": "success", "result": "Query processed successfully","response":'''Regarding your request to fetch invoices where the total amount exceeds $150 — I've reviewed the records and found that the invoices from Flipkart and Azure Interior meet the criteria. Both of these invoices have totals greater than $150, with Azure Interior's invoice totaling $279.84. Let me know if you need the files or any additional details from them.
@@ -58,7 +52,6 @@ async def getuserquery(request: Request):
     # if("Hi" in data['data']):
     #     return JSONResponse(content={"status": "success", "result": "Query processed successfully","response":'''Hello! How can I assist you today? If you have any questions or need help, feel free to ask.
     #     '''})
->>>>>>> 19b87b95fe1d2534b05e866cab4c072228404e61
 
     return JSONResponse(content={"status": "success", "result": "Query processed successfully","response": response})
     

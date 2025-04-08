@@ -69,3 +69,25 @@ def fn(path):
         except Exception as e:
                         print(f"Error processing {path}: {e}")
 
+def get_file_info(data):
+    userPrompt = data['data']
+    files = data['files']
+    feedback = data['feedback']
+
+    for file in files:
+        file_name = file['name']
+        file_path = os.path.join(root, file_name)
+        if file_path.endswith(".pdf"):
+            result = analyze_pdf(file_path)
+        elif file_path.endswith(".docx"):
+            result = analysis_word(file_path)
+        elif file_path.endswith(".jpg") or file_path.endswith(".png") or file_path.endswith(".jpeg"):
+            result = analysis_image(file_path)
+        elif file_path.endswith(".mp4"):
+            result = analysis_video(file_path)
+        else:
+            continue
+        # Process the result as needed
+
+
+
