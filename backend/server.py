@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,Request
+from fastapi.responses import JSONResponse
 from controllers.getFolderAnalysis.handler import analysisFolder as analyze_folder
 
 app = FastAPI()
@@ -7,11 +8,6 @@ app = FastAPI()
 def read_root():
     return {"Hello": "World"}
 
-@app.route('/getfileinfo', methods=['POST'])
-def analysisFolder():
-    data=request.get_json()
-    print(data)
-    analyze_folder(data)
 
 @app.post("/getuserquery")
 def getuserquery():
@@ -19,3 +15,9 @@ def getuserquery():
     handle_user_query(data)
 
     
+@app.post("/getfileinfo")
+async def analysisFolder(request: Request):
+    data = await request.json()
+    print(data['data'])
+    result = analyze_folder(data['data'])
+    return JSONResponse(content={"status": "success", "result": result})

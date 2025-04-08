@@ -7,9 +7,11 @@ from redis import get_from_redis, add_to_redis
 
 
 def analysisFolder(folder_path):
-  
+    print(f"📂 Analyzing folder: {folder_path}")
+    extracted_data = []
     for root, _, files in os.walk(folder_path):
         for file in files:
+            print(file)
             if file.endswith(".pdf"):
                 full_path = os.path.join(root, file)
                 if(get_from_redis(full_path) == None):

@@ -1,57 +1,23 @@
-# import autogen
-# from autogen import AssistantAgent, UserProxyAgent
-# from PyPDF2 import PdfReader
-# from llmConfig import llm_config
-
-# def extract_text_from_pdf(pdf_path):
-#     reader = PdfReader(pdf_path)
-#     text = ""
-#     for page in reader.pages:
-#         text += page.extract_text()
-#     return text
-
-# extractor_agent = AssistantAgent(
-#     name="PDFExtractorAgent",
-#     llm_config=llm_config,
-#     system_message="""
-# You are a document analysis assistant. Your job is to extract structured data from PDF invoices.
-# Return the following:
-# 1. Company Name
-# 2. Document Type (e.g., Invoice, Delivery Challan, etc.)
-# 3. Corporate/technical details mentioned in the document.
-# Output as a clear JSON object.
-# """
-# )
-
-# user_proxy = UserProxyAgent(
-#     name="UserProxyAgent",
-#     human_input_mode="NEVER",
-#     code_execution_config=False
-# )
-
-# def analyze_pdf_invoice(pdf_path):
-#     extracted_text = extract_text_from_pdf(pdf_path)
-    
-#     user_proxy.initiate_chat(
-#         recipient=extractor_agent,
-#         message=f"""
-# Extract structured invoice data from the following PDF text:
-# \"\"\"
-# {extracted_text}
-# \"\"\"
-# """
-#     )
-
-# if __name__ == "__main__":
-#     pdf_file = "invoice_sample.pdf"
-#     analyze_pdf_invoice(pdf_file)
-
 import os
 from autogen import AssistantAgent, UserProxyAgent
 from PyPDF2 import PdfReader
-from llmConfig import llm_config
 
-# === PDF Text Extraction ===
+# llm_config = {
+#     "model": "gemma2",
+#     "api_key": "ollama",
+#     "base_url": "http://localhost:11434/v1",
+#     "temperature": 0.3,
+# }
+
+llm_config = {
+"model": "gemma2-9b-it",
+    "api_key": "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",
+    "base_url": "https://api.groq.com/openai/v1",
+    "temperature": 0.3,
+}
+
+
+# === Extract Text from PDF ===
 def extract_text_from_pdf(pdf_path):
     reader = PdfReader(pdf_path)
     text = ""
@@ -61,42 +27,52 @@ def extract_text_from_pdf(pdf_path):
             text += page_text + "\n"
     return text
 
-# === AI Assistant Agent ===
+# === Assistant Agent with Strong Prompt ===
 extractor_agent = AssistantAgent(
     name="PDFExtractorAgent",
     llm_config=llm_config,
     system_message="""
 You are an intelligent document analyzer.
 
-Your task is to extract the core subjects or key topics discussed in the document.
+Your task is:
+- Extract only keywords related to company names, document types (like Invoice or Delivery Challan).
 
-Only return a concise list of subject keywords or topics that represent the document's content. Do not summarize or explain them.
-
-The list must be specific, context-aware, and ordered by relevance if possible.
-
-Output format: [subject1, subject2, subject3, ...]
-
+Rules:
+- Return a clean Python list of relevant keywords only, like:
+  ["Strategic Corp", "Invoice", "Factuur", "Delivery Challan"]
+- Do NOT include any explanation, notes, or full sentences.
+- Only respond with the Python list. Nothing else.
 """
 )
 
-# === User Proxy ===
+# === User Proxy Agent ===
 user_proxy = UserProxyAgent(
     name="UserProxyAgent",
     human_input_mode="NEVER",
-    code_execution_config=False
+    code_execution_config=False,
 )
 
-# === Single PDF Analysis ===
+# === Analyze PDF ===
 def analyze_pdf(pdf_path):
     extracted_text = extract_text_from_pdf(pdf_path)
-    
-    response = user_proxy.initiate_chat(
+    user_proxy.send(
         recipient=extractor_agent,
         message=f"""
-Extract structured invoice data from the following PDF text:
-\"\"\"
-{extracted_text}
-\"\"\"
+Extract document-related keywords from the following text:
+\"\"\"{extracted_text}\"\"\"
 """
     )
-    return response.last_message()["content"]
+
+    reply = extractor_agent.generate_reply(sender=user_proxy)
+    user_proxy.receive(sender=extractor_agent, message=reply)
+
+    return reply
+if __name__ == "__main__":
+    pdf_path = "invoices/SammyMaystoneLinesTest.pdf"
+    if not os.path.exists(pdf_path):
+        print(f"❌ File not found: {pdf_path}")
+        exit(1)
+
+    print(f"📄 Analyzing: {pdf_path}")
+    final_keywords = analyze_pdf(pdf_path)
+    print("✅ Final Extracted Keywords:\n", final_keywords)
