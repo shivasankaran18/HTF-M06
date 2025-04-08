@@ -1,4 +1,3 @@
-# 🚀 HackToFuture 3.0 Repository Setup Guide
 
 # 🧠 HTF-M06 — AI-Powered Document Intelligence System
 
