@@ -39,9 +39,11 @@ Your task is:
 
 Rules:
 - Return a clean Python list of relevant keywords only, like:
-  ["Strategic Corp", "Invoice", "Factuur", "Delivery Challan"]
+  ["strategic corp", "invoice", "factuur", "delivery challan"]
 - Do NOT include any explanation, notes, or full sentences.
 - Only respond with the Python list. Nothing else.
+- all the labels should be in lowercase
+- The keywords should be relevant to the document type.
 """
 )
 

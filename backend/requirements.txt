@@ -2,9 +2,13 @@ fastapi
 autogen
 PyPDF2
 uvicorn
-docx
+python-docx
 google-generativeai
 duckduckgo-search
 redis
 langchain
-sentence-transformers
+torch
+easyocr
+phi
+phidata
+langchain-community 
