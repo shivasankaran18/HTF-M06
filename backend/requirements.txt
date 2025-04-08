@@ -12,3 +12,4 @@ easyocr
 phi
 phidata
 langchain-community 
+langchain-google-genai

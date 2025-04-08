@@ -10,9 +10,21 @@ from Redis_Client import add_to_redis, get_from_redis, redis_client
 import json
 import os
 from langchain_community.embeddings import OllamaEmbeddings
+from PyPDF2 import PdfReader
 
 from dotenv import load_dotenv
 load_dotenv()
+
+def extract_text_from_pdf(pdf_path):
+    reader = PdfReader(pdf_path)
+    text = ""
+    for page in reader.pages:
+        page_text = page.extract_text()
+        if page_text:
+            text += page_text + "\n"
+    return text
+
+
 
 os.environ['HF_TOKEN']=os.getenv("HF_TOKEN")
 embeddings=(
@@ -54,9 +66,25 @@ user_proxy = UserProxyAgent(
     code_execution_config=False
 )
 
+getDetailsAgent = AssistantAgent(
+    name="getDetailsAgent",
+    llm_config=llm_config,
+    system_message="""
+You are an intelligent document analyzer.
+Your task is:
+- Extract the data from the associated documents and provide a comprehensive answer to the user's query.
+Rules:
+- Use the context provided to answer the user's query.
+- Ensure that the answer is relevant to the user's query.
+- Provide a clear and concise response.
+- Do not include any irrelevant information.
+- Do not include any explanations or notes. 
+"""
+)
+
 def handle_user_query(data):
     # First, get the relevant files
-    print(f"Received data: {data}")
+
     user_proxy.send(
         recipient=extractor_agent,
         message=f"""
@@ -65,18 +93,43 @@ def handle_user_query(data):
     )
     reply = extractor_agent.generate_reply(sender=user_proxy)
     user_proxy.receive(sender=extractor_agent, message=reply)
-    print(reply)
-   
+
+    # Parse the reply into a list of strings
+    try:
+        # Remove any whitespace and convert to lowercase
+        parsedString = reply[1:len(reply)-3]
+       
+        topics = parsedString.split(",")
+  
+        reply_embedding = embeddings.embed_query(topics)
+    except Exception as e:
+    
+        topics = []
+        reply_embedding = None
+    
     files = []
     # Search for files containing any of the topics
     for key in redis_client.keys():
+    
         try:
             temp = get_from_redis(key)
             if temp:
-                temp2 = json.loads(temp)
-                print(temp2)                # Check if any topic is in the file content
-                if any(reply.lower() in str(temp2).lower() for topic in topics):
-                    files.append(key.decode('utf-8'))  # Decode bytes to string
+                temp3 =temp[1:len(temp)-3]
+          
+                temp2=temp3.split(",")
+           
+                key_embedding = embeddings.embed_query(temp2)
+                similarity = cosine_similarity(
+                    [reply_embedding],
+                    [key_embedding]
+                )[0][0]
+      
+                # print(f"Similarity between {key_str} and {topics}: {similarity}")
+                
+                if similarity > 0.5:
+                    files.append(key)
+                    # print(f"Found relevant file with similarity {similarity}: {key_str}")
+                    
         except Exception as e:
             print(f"Error processing key {key}: {e}")
             continue
@@ -86,10 +139,11 @@ def handle_user_query(data):
     context = []
     for file_path in files:
         try:
-            with open(file_path, 'r', encoding='utf-8') as file:
-                content = file.read()
+            content = extract_text_from_pdf(file_path)
+            print(f"Extracted content from {file_path}: {content}")
             
             chunks = text_splitter.split_text(content)
+            print(f"Chunks for {file_path}: {chunks}")
         
             chunk_embeddings = embeddings.embed_documents(chunks)
             print(chunk_embeddings) 
@@ -117,7 +171,7 @@ def handle_user_query(data):
             continue
 
     # Sort context by similarity score
-    context.sort(key=lambda x: x['similarity_score'], reverse=True)
+    # context.sort(key=lambda x: x['similarity_score'], reverse=True)
     
     # Prepare context string for final response
     context_str = "\n".join([
@@ -126,7 +180,7 @@ def handle_user_query(data):
     ])
 
     user_proxy.send(
-        recipient=extractor_agent,
+        recipient=getDetailsAgent,
         message=f"""
         Query: {data}
         
@@ -136,8 +190,8 @@ def handle_user_query(data):
         Please provide a comprehensive answer based on the above context.
         """
     )
-    final_response = extractor_agent.generate_reply(sender=user_proxy)
-    user_proxy.receive(sender=extractor_agent, message=final_response)
+    final_response = getDetailsAgent.generate_reply(sender=user_proxy)
+    user_proxy.receive(sender=getDetailsAgent, message=final_response)
     print(final_response)
 
 
