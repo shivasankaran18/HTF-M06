@@ -12,3 +12,5 @@ easyocr
 phidata
 langchain-community
 langchain-google-genai
+faiss-cpu
+pypdf

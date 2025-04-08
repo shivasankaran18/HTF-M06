@@ -4,13 +4,17 @@ import redis
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-from Redis_Client import add_to_redis, get_from_redis, redis_client
+from Redis_Client import get_from_redis, redis_client
 import json
 import os
 from langchain_community.embeddings import OllamaEmbeddings
 from agents.keyWordAgent import keyword_extractor_agent,user_proxy
 from dotenv import load_dotenv
 from parsers.pdfParsers import extract_text_from_pdf
+from PyPDF2 import PdfReader
+from dotenv import load_dotenv
+from langchain_community.vectorstores import FAISS
+from langchain.document_loaders import PyPDFLoader
 
 load_dotenv()
 
@@ -132,13 +136,14 @@ def handle_user_query(data):
             print(f"Error processing key {key}: {e}")
             continue
     
+    print(f"Found relevant files: {files}")
     context = []
     for file_path in files:
         try:
             content = extract_text_from_pdf(file_path)
             chunks = text_splitter.split_text(content)
             chunk_embeddings = embeddings.embed_documents(chunks)
-            query_embedding = embeddings.embed_query(improved_prompt)  
+            query_embedding = embeddings.embed_query(improved_prompt)
             similarity_scores = cosine_similarity(
                 [query_embedding],
                 chunk_embeddings
@@ -152,7 +157,8 @@ def handle_user_query(data):
                 })
         except Exception as e:
             print(f"Error processing {file_path}: {e}")
-            continue    
+            continue
+    
     context_str = "\n".join([
         f"File: {item['file']}\nContent: {item['content']}\nSimilarity Score: {item['similarity_score']:.4f}\n"
         for item in context
