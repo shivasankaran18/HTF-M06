@@ -111,14 +111,14 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFilesUploaded, onDirectoryStr
       
       toast.success(`Uploaded ${uploadedFiles.length} files from directory structure successfully!`, {
         style: {
-          background: '#ffffff',
-          color: '#9333ea', // fuchsia-600
+          background: '#FFFDF2',
+          color: '#000000',
           borderRadius: '1rem',
           boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
         },
         iconTheme: {
-          primary: '#9333ea',
-          secondary: '#ffffff',
+          primary: '#000000',
+          secondary: '#FFFDF2',
         },
       });
       
@@ -144,29 +144,12 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFilesUploaded, onDirectoryStr
     noKeyboard: false,
   });
 
-  // Render a directory structure preview
-  const renderDirectoryItem = (item: DirectoryStructure, level: number = 0) => {
-    return (
-      <div key={item.path} style={{ marginLeft: `${level * 16}px` }}>
-        <div className="flex items-center gap-2 py-1">
-          {item.type === 'directory' ? (
-            <Folder size={16} className="text-amber-500" />
-          ) : (
-            <File size={16} className="text-fuchsia-500" />
-          )}
-          <span>{item.name}</span>
-        </div>
-        {item.children && item.children.map(child => renderDirectoryItem(child, level + 1))}
-      </div>
-    );
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 100, damping: 15 }}
-      className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl p-8 border border-pink-200"
+      className="bg-[#FFFDF2] rounded-3xl shadow-xl p-8 border-2 border-black"
     >
       <motion.div 
         className="flex items-center gap-3 mb-8"
@@ -185,9 +168,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFilesUploaded, onDirectoryStr
             repeatType: "reverse"
           }}
         >
-          <FolderTree className="text-amber-500" size={28} />
+          <FolderTree className="text-black" size={28} />
         </motion.div>
-        <h2 className="text-3xl font-bold text-fuchsia-800">
+        <h2 className="text-3xl font-bold text-black">
           Upload Directory Structure
         </h2>
       </motion.div>
@@ -196,27 +179,14 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFilesUploaded, onDirectoryStr
         {...getRootProps()}
         className={`relative overflow-hidden border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-300 group ${
           isDragActive 
-            ? 'border-amber-400 bg-amber-50' 
-            : 'border-violet-200 hover:border-violet-400'
+            ? 'border-black bg-black/5' 
+            : 'border-black hover:border-black'
         }`}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
         <input {...getInputProps()} directory="" webkitdirectory="" />
         
-        {/* Background gradient animation */}
-        <motion.div 
-          className="absolute inset-0 bg-gradient-to-r from-pink-400/20 via-fuchsia-400/20 to-violet-400/20"
-          animate={{
-            x: ['0%', '100%', '0%'],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: 'linear',
-          }}
-        />
-
         <motion.div
           className="relative z-10"
           animate={{
@@ -228,34 +198,18 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFilesUploaded, onDirectoryStr
           <div className="relative">
             <FolderTree
               className={`mx-auto mb-6 transition-all duration-300 ${
-                isDragActive ? 'text-amber-500 scale-110' : 'text-fuchsia-500 group-hover:text-fuchsia-600'
+                isDragActive ? 'text-black scale-110' : 'text-black group-hover:text-black'
               }`}
               size={64}
             />
-            <motion.div
-              className="absolute inset-0 blur-xl opacity-50"
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.5, 0.8, 0.5],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-              }}
-            >
-              <FolderTree
-                className="mx-auto mb-6 text-fuchsia-400"
-                size={64}
-              />
-            </motion.div>
           </div>
           
           <h3 className={`text-xl font-semibold mb-2 transition-colors ${
-            isDragActive ? 'text-amber-600' : 'text-fuchsia-600'
+            isDragActive ? 'text-black' : 'text-black'
           }`}>
             {isDragActive ? 'Drop your folders here!' : 'Drop folders here or click to upload'}
           </h3>
-          <p className="text-sm text-violet-500 max-w-md mx-auto">
+          <p className="text-sm text-black max-w-md mx-auto">
             Upload your directory structure and let our AI assistant help you analyze them
           </p>
         </motion.div>
@@ -265,9 +219,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFilesUploaded, onDirectoryStr
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="mt-4 p-4 bg-violet-50 rounded-lg"
+          className="mt-4 p-4 bg-black/5 rounded-lg"
         >
-          <div className="flex items-center justify-center gap-2 text-fuchsia-600">
+          <div className="flex items-center justify-center gap-2 text-black">
             <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>

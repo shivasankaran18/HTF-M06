@@ -1,34 +1,51 @@
-# import os
-# from autogen import AssistantAgent, UserProxyAgent
-# from PyPDF2 import PdfReader
-# from llmConfig import llm_config
+import os
+from autogen import AssistantAgent, UserProxyAgent
+from PyPDF2 import PdfReader
+import easyocr
+import re
+import torch
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM  # ✅ Fixed import
 
-# import easyocr
-# import re
-# def extract_text(image_path):
-#     reader = easyocr.Reader(['en'])
-#     result = reader.readtext(image_path, detail=0)
-#     return ' '.join(result)
-# from transformers import AutoTokenizer, AutoModelForCausalLM
-# import torch
+llm_config = {
+    "model": "gemma2-9b-it",  # Optional if you're using Groq
+    "api_key": "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",
+    "base_url": "https://api.groq.com/openai/v1",
+    "temperature": 0.3,
+}
 
-# def analyze_with_flan(text, model_name="google/flan-t5-small"):
-#     tokenizer = AutoTokenizer.from_pretrained(model_name)
-#     model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto", torch_dtype=torch.float16)
+def extract_text(image_path):
+    reader = easyocr.Reader(['en'])
+    result = reader.readtext(image_path, detail=0)
+    return ' '.join(result)
 
-#     prompt = f"Extract key-value pairs such as sender name, sender address, receiver name, receiver address, invoice number, date, product name, quantity, and total amount from the following invoice text:\n\n{text}"
-#     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
-#     output = model.generate(**inputs, max_new_tokens=200)
-#     return tokenizer.decode(output[0], skip_special_tokens=True)
-# if __name__ == "__main__":
-#     image_path = "C:/Users/yuvas/HTF-M06/invoices/AmazonWebServices.png"
-#     text = extract_text(image_path)
-#     print("📄 Extracted Text:\n", text)
+def analyze_with_flan(text, model_name="google/flan-t5-small"):  # Or flan-t5-base
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForSeq2SeqLM.from_pretrained(model_name, device_map="auto", torch_dtype=torch.float16)  # ✅ Fixed class
+    prompt = f"""Extract the following information from the invoice text below:
+- Sender name
+- Sender address
+- Receiver name
+- Receiver address
+- Invoice number
+- Date
+- Product name
+- Quantity
+- Total amount
 
-#     summary = analyze_with_flan(text)
+Invoice text:
+{text}"""
 
-#     print("\n📌 LLM Output:\n", summary)
+    inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+    output = model.generate(**inputs, max_new_tokens=200)
+    return tokenizer.decode(output[0], skip_special_tokens=True)
 
+if __name__ == "__main__":
+    image_path = "documentRepo/AmazonWebServices.png"
+    text = extract_text(image_path)
+    print("📄 Extracted Text:\n", text)
+
+    summary = analyze_with_flan(text)
+    print("\n📌 LLM Output:\n", summary)
 
 def analysis_image(path):
-    pass
+    pass  # Placeholder if needed for later

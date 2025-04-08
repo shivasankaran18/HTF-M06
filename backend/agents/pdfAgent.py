@@ -2,13 +2,6 @@ import os
 from autogen import AssistantAgent, UserProxyAgent
 from PyPDF2 import PdfReader
 
-# llm_config = {
-#     "model": "gemma2",
-#     "api_key": "ollama",
-#     "base_url": "http://localhost:11434/v1",
-#     "temperature": 0.3,
-# }
-
 llm_config = {
 "model": "gemma2-9b-it",
     "api_key": "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",
@@ -17,7 +10,6 @@ llm_config = {
 }
 
 
-# === Extract Text from PDF ===
 def extract_text_from_pdf(pdf_path):
     reader = PdfReader(pdf_path)
     text = ""
@@ -27,7 +19,6 @@ def extract_text_from_pdf(pdf_path):
             text += page_text + "\n"
     return text
 
-# === Assistant Agent with Strong Prompt ===
 extractor_agent = AssistantAgent(
     name="PDFExtractorAgent",
     llm_config=llm_config,

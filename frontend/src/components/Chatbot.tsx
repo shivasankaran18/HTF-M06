@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, FileText, X, Paperclip, FolderTree, File, Folder, ChevronRight, ChevronDown } from 'lucide-react';
 import { DirectoryStructure } from './FileUpload';
+import axios from 'axios';
 
 interface ChatbotProps {
   uploadedFiles: File[];
@@ -35,9 +36,14 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() && selectedFiles.length === 0) return;
+    console.log(input)
+    await axios.post("http://localhost:8000/getuserquery", {
+    
+      data: input,
+    })
 
     setMessages(prev => [...prev, { 
       text: input || "Analyzing attached files...",
@@ -416,6 +422,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
               className="px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-lg shadow-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={handleSubmit}
             >
               <Send size={20} />
             </motion.button>

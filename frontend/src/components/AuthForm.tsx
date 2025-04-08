@@ -21,8 +21,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ isSignUp, onAuth }) => {
   };
 
   return (
-    <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl p-8 border border-gray-200">
-      <h2 className="text-3xl font-bold text-gray-800 mb-6">
+    <div className="bg-[#FFFDF2] border-2 border-black rounded-3xl shadow-xl p-8">
+      <h2 className="text-3xl font-bold text-black mb-6">
         {isSignUp ? 'Create Account' : 'Welcome Back'}
       </h2>
       
@@ -31,23 +31,23 @@ const AuthForm: React.FC<AuthFormProps> = ({ isSignUp, onAuth }) => {
         className="space-y-4"
       >
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-black mb-1">
             Email
           </label>
           <input
             type="email"
-            className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-teal-400 focus:ring-1 focus:ring-teal-400 outline-none transition-all"
+            className="w-full px-4 py-2 rounded-xl border-2 border-black focus:ring-2 focus:ring-black outline-none transition-all bg-[#FFFDF2]"
             placeholder="Enter your email"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-black mb-1">
             Password
           </label>
           <input
             type="password"
-            className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-teal-400 focus:ring-1 focus:ring-teal-400 outline-none transition-all"
+            className="w-full px-4 py-2 rounded-xl border-2 border-black focus:ring-2 focus:ring-black outline-none transition-all bg-[#FFFDF2]"
             placeholder="Enter your password"
           />
         </div>
@@ -55,7 +55,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ isSignUp, onAuth }) => {
         <motion.button
           type="submit"
           disabled={loading}
-          className="w-full bg-gradient-to-r from-teal-600 to-blue-600 text-white py-2 px-4 rounded-xl hover:from-teal-700 hover:to-blue-700 transition-all disabled:opacity-50"
+          className="w-full bg-black text-[#FFFDF2] py-2 px-4 rounded-xl hover:bg-gray-800 transition-all disabled:opacity-50"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
