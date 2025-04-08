@@ -18,7 +18,7 @@ const UploadPage: React.FC = () => {
     console.log('Uploaded files:', files);
     console.log(typeof files[0])
     await axios.post("http://localhost:8000/getfileinfo",{
-      data:"/home/shiva_18/htf/AzureInterior.pdf"
+      data:"/home/shiva_18/htf/HTF-M06/backend/documentRepo"
     })
     toast.success(`Successfully uploaded ${files.length} files!`, {
       style: {

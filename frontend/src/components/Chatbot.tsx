@@ -67,6 +67,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
   }, [userInteractionCount, feedbackInterval]);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log('Form submitted');
     e.preventDefault();
     if (!input.trim() && selectedFiles.length === 0) return;
 
@@ -82,14 +83,14 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
     setShowFileSelector(false);
     setIsSubmitting(true);
     console.log(input)
-    var feedbackRating;
-    if(feedbackHistory[feedbackHistory.length - 1].rating == "like"){
-      feedbackRating = 1;
-    } else if(feedbackHistory[feedbackHistory.length - 1].rating == "neutral"){
-      feedbackRating = 0;
-    } else {
-      feedbackRating = -1;
-    }
+    var feedbackRating=1;
+    // if(feedbackHistory[feedbackHistory.length - 1].rating == "like"){
+    //   feedbackRating = 1;
+    // } else if(feedbackHistory[feedbackHistory.length - 1].rating == "neutral"){
+    //   feedbackRating = 0;
+    // } else {
+    //   feedbackRating = -1;
+    // }
     try {
       const files = selectedFiles.map(file => ({
         name: file.name,
@@ -101,7 +102,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
           feedback: feedbackRating
         });
         const botMessage: Message = {
-          text: response.data.response,  
+          text: response.data.response.content,  
           isUser: false,
           timestamp: new Date()
         };
@@ -112,7 +113,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
           feedback: feedbackRating
         });
         const botMessage: Message = {
-          text: response.data.response,  
+          text: response.data.response.content,  
           isUser: false,
           timestamp: new Date()
         };

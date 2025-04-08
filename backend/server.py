@@ -52,4 +52,3 @@ async def getspecificfileinfo(request: Request):
     print(data)
     result = get_file_info(data)
     return JSONResponse(content={"status": "success", "result": result})
-

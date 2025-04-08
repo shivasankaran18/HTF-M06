@@ -220,7 +220,7 @@ def handle_user_query(data):
                     [reply_embedding],
                     [key_embedding]
                 )[0][0]
-                if similarity > 0.5:
+                if similarity > 0.8:
                     files.append(key)
         except Exception as e:
             print(f"Error processing key {key}: {e}")
