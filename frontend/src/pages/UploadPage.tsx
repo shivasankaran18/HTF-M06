@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import FileUpload, { DirectoryStructure } from '../components/FileUpload';
 import Navbar from '../components/Navbar';
 import toast from 'react-hot-toast';
+import axios from 'axios';
 
 const UploadPage: React.FC = () => {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -11,9 +12,14 @@ const UploadPage: React.FC = () => {
   const [isUploadComplete, setIsUploadComplete] = useState(false);
   const navigate = useNavigate();
 
-  const handleFilesUploaded = (files: File[]) => {
+  const handleFilesUploaded = async (files: File[]) => {
     setUploadedFiles(files);
     setIsUploadComplete(true);
+    console.log('Uploaded files:', files);
+    console.log(typeof files[0])
+    await axios.post(`http://localhost:8000/getfileinfo`,{
+      data:"/home/shiva_18/htf/AzureInterior.pdf"
+    })
     toast.success(`Successfully uploaded ${files.length} files!`, {
       style: {
         background: '#FFFDF2',
@@ -59,7 +65,7 @@ const UploadPage: React.FC = () => {
       className="min-h-screen flex flex-col"
     >
       <Navbar 
-        userName="John Doe"
+        userName="Shiva"
         uploadedFilesCount={uploadedFiles.length}
         isUploadComplete={isUploadComplete}
       />

@@ -31,7 +31,7 @@ def analysisFolder(folder_path):
                         add_to_redis(full_path, result)
                     except Exception as e:
                         print(f"Error processing {full_path} : {e}")
-            elif file.endswith(".jpg") or files.endswith(".png") or files.endswith(".jpeg"):
+            elif file.endswith(".jpg") or file.endswith(".png") or file.endswith(".jpeg"):
                 full_path = os.path.join(root,file)
                 if(get_from_redis(full_path) == None):
                     print(f"📄 Analyzing: {full_path}")

@@ -41,7 +41,6 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
     e.preventDefault();
     if (!input.trim() && selectedFiles.length === 0) return;
 
-    // Add user message to chat
     const userMessage: Message = {
       text: input || "Analyzing attached files...",
       isUser: true,
@@ -53,23 +52,25 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
     setSelectedFiles([]);
     setShowFileSelector(false);
     setIsLoading(true);
+    console.log(input)
 
     try {
-      // Send message to backend
+
       const response = await axios.post("http://localhost:8000/getuserquery", {
-        data: input  // Match the backend expected format
+        data: input  
       });
 
-      // Add bot response to chat
+
       const botMessage: Message = {
-        text: response.data.result,  // Match the backend response format
+        text: response.data.response,  
         isUser: false,
         timestamp: new Date()
       };
       setMessages(prev => [...prev, botMessage]);
+      // setIsLoading(false);
     } catch (error) {
       console.error('Error sending message:', error);
-      // Add error message to chat
+ 
       const errorMessage: Message = {
         text: "Sorry, I encountered an error while processing your request. Please try again.",
         isUser: false,
@@ -294,7 +295,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
                 </div>
               </motion.div>
             ))}
-            {isLoading && (
+            {/* {isLoading && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -311,7 +312,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
                   </motion.div>
                 </div>
               </motion.div>
-            )}
+            )} */}
             <div ref={chatEndRef} />
           </AnimatePresence>
         </div>

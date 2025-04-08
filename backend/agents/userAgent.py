@@ -126,7 +126,7 @@ def handle_user_query(data):
       
                 # print(f"Similarity between {key_str} and {topics}: {similarity}")
                 
-                if similarity > 0.5:
+                if similarity > 0.9:
                     files.append(key)
                     # print(f"Found relevant file with similarity {similarity}: {key_str}")
                     
@@ -135,7 +135,7 @@ def handle_user_query(data):
             continue
     
     print(f"Found relevant files: {files}")
-    
+
     context = []
     for file_path in files:
         try:
