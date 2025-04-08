@@ -22,7 +22,19 @@ This project leverages LLM-based agents, embeddings, reinforcement learning, and
 
 ---
 
-## 📁 Folder Structure
+## 🎥 Demo
+
+## ⚙️ Technologies Used
+
+-🧠 Gemma 2B / Ollama Embeddings
+-🤖 AutoGen & Phidata Agents
+-🔴 Redis for fast in-memory doc-keyword lookup
+-🧾 LangChain for document loading and chunking
+-🎯 PyTorch for RL-based document reranking
+-📄 PDF Parsing using PyPDF2 and PyMuPDF
+-📈 Cosine Similarity via Scikit-learn
+
+
 
 
 
