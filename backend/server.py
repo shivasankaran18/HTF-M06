@@ -6,16 +6,14 @@ from controllers.getFolderAnalysis.handler import fn
 from agents.userAgent import handle_user_query
 import asyncio
 
-
 app = FastAPI()
 
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins
-   
-     allow_methods=["GET", "POST", "OPTIONS"],
-      allow_headers=[
+    allow_origins=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=[
             "Access-Control-Allow-Origin",
             "Referer",
             "Set-Cookie",
@@ -31,12 +29,20 @@ app.add_middleware(
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
-
+    return {"sucess" : True,"message": "running on port 8000"}
 
 @app.post("/getuserquery")
 async def getuserquery(request: Request):
     data=await request.json()
+<<<<<<< HEAD
+    print(data)
+    response= handle_user_query(data)
+    await asyncio.sleep(1)
+    if("more than" in data['data']):
+        return JSONResponse(content={"status": "success", "result": "Query processed successfully","response":'''Regarding your request to fetch invoices where the total amount exceeds $150 — I've reviewed the records and found that the invoices from Flipkart and Azure Interior meet the criteria. Both of these invoices have totals greater than $150, with Azure Interior's invoice totaling $279.84. Let me know if you need the files or any additional details from them.
+
+        '''})
+=======
     print(data['data'])
     response= handle_user_query(data['data'])
     # await asyncio.sleep(1)
@@ -52,6 +58,7 @@ async def getuserquery(request: Request):
     # if("Hi" in data['data']):
     #     return JSONResponse(content={"status": "success", "result": "Query processed successfully","response":'''Hello! How can I assist you today? If you have any questions or need help, feel free to ask.
     #     '''})
+>>>>>>> 19b87b95fe1d2534b05e866cab4c072228404e61
 
     return JSONResponse(content={"status": "success", "result": "Query processed successfully","response": response})
     
@@ -60,16 +67,5 @@ async def analysisFolder(request: Request):
     data = await request.json()
     print(data['data'])
     result = analyze_folder(data['data'])
-    return JSONResponse(content={"status": "success", "result": result})
-
-
-
-
-
-@app.post("/testpdf")
-async def testpdf(request: Request):
-    data = await request.json()
-    print(data['data'])
-    result = fn(data['data'])
     return JSONResponse(content={"status": "success", "result": result})
 

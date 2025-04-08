@@ -9,9 +9,8 @@ redis
 langchain
 torch
 easyocr
-phi
 phidata
-langchain-community 
+langchain-community
 langchain-google-genai
 faiss-cpu
 pypdf
