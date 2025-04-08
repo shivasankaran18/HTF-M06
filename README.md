@@ -41,19 +41,19 @@ This project leverages LLM-based agents, embeddings, reinforcement learning, and
 
 ## ⚙️ Technologies Used
 
-# Frontend
+### Frontend
 
 - React.js
 
 - React Typescript
 
-# Backend
+#### Backend
 
 - Fastapi
 
 - Python
 
-# Agentic AI
+### Agentic AI
   
 -  Gemma 2B / Ollama Embeddings
 
