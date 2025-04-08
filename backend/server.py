@@ -4,13 +4,10 @@ from controllers.getFolderAnalysis.handler import analysisFolder as analyze_fold
 from controllers.getFolderAnalysis.handler import fn
 from agents.userAgent import handle_user_query
 
-
 app = FastAPI()
-
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
-
+    return {"sucess" : True,"message": "running on port 8000"}
 
 @app.post("/getuserquery")
 async def getuserquery(request: Request):
@@ -28,13 +25,10 @@ async def analysisFolder(request: Request):
     return JSONResponse(content={"status": "success", "result": result})
 
 
-
-
-
-@app.post("/testpdf")
-async def testpdf(request: Request):
-    data = await request.json()
-    print(data['data'])
-    result = fn(data['data'])
-    return JSONResponse(content={"status": "success", "result": result})
+# @app.post("/testpdf")
+# async def testpdf(request: Request):
+#     data = await request.json()
+#     print(data['data'])
+#     result = fn(data['data'])
+#     return JSONResponse(content={"status": "success", "result": result})  // this is a test for pdf parsing
 
