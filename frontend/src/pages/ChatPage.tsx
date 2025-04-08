@@ -31,7 +31,7 @@ const ChatPage: React.FC = () => {
       className="min-h-screen flex flex-col"
     >
       <Navbar 
-        userName="John Doe"
+        userName="Shiva"
         uploadedFilesCount={uploadedFiles.length}
         isUploadComplete={true}
       />

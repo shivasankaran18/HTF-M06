@@ -11,8 +11,11 @@ import json
 import os
 from langchain_community.embeddings import OllamaEmbeddings
 from PyPDF2 import PdfReader
-
 from dotenv import load_dotenv
+from langchain_community.vectorstores import FAISS
+from langchain.document_loaders import PyPDFLoader
+
+
 load_dotenv()
 
 def extract_text_from_pdf(pdf_path):
@@ -83,7 +86,6 @@ Rules:
 )
 
 def handle_user_query(data):
-    # First, get the relevant files
 
     user_proxy.send(
         recipient=extractor_agent,
@@ -93,10 +95,8 @@ def handle_user_query(data):
     )
     reply = extractor_agent.generate_reply(sender=user_proxy)
     user_proxy.receive(sender=extractor_agent, message=reply)
-
-    # Parse the reply into a list of strings
     try:
-        # Remove any whitespace and convert to lowercase
+
         parsedString = reply[1:len(reply)-3]
        
         topics = parsedString.split(",")
@@ -108,32 +108,22 @@ def handle_user_query(data):
         reply_embedding = None
     
     files = []
-    # Search for files containing any of the topics
     for key in redis_client.keys():
-    
         try:
             temp = get_from_redis(key)
             if temp:
                 temp3 =temp[1:len(temp)-3]
-          
                 temp2=temp3.split(",")
-           
                 key_embedding = embeddings.embed_query(temp2)
                 similarity = cosine_similarity(
                     [reply_embedding],
                     [key_embedding]
-                )[0][0]
-      
-                # print(f"Similarity between {key_str} and {topics}: {similarity}")
-                
-                if similarity > 0.9:
+                )[0][0]            
+                if similarity > 0.5:
                     files.append(key)
-                    # print(f"Found relevant file with similarity {similarity}: {key_str}")
-                    
         except Exception as e:
             print(f"Error processing key {key}: {e}")
             continue
-    
     print(f"Found relevant files: {files}")
 
     context = []
@@ -141,58 +131,39 @@ def handle_user_query(data):
         try:
             content = extract_text_from_pdf(file_path)
             print(f"Extracted content from {file_path}: {content}")
-            
-            chunks = text_splitter.split_text(content)
-            print(f"Chunks for {file_path}: {chunks}")
-        
-            chunk_embeddings = embeddings.embed_documents(chunks)
-            print(chunk_embeddings) 
-           
-            query_embedding = embeddings.embed_query(data)
-            print(query_embedding)
-            # Calculate similarity scores
-            similarity_scores = cosine_similarity(
-                [query_embedding],
-                chunk_embeddings
-            ).flatten()  # Flatten the array to get all scores
-            
-            top_indices = np.argsort(similarity_scores)[-3:][::-1]  # Get indices of top 3 scores
-            
-            # Add top chunks to context
-            for idx in top_indices:
-                context.append({
-                    'file': file_path,
-                    'content': chunks[idx],
-                    'similarity_score': float(similarity_scores[idx])
-                })
-                
+
+            loader = PyPDFLoader(file_path)
+            pages = loader.load()
+            text_splitter=RecursiveCharacterTextSplitter(chunk_size=1000,chunk_overlap=30)
+            docs=text_splitter.split_documents(pages)
+
+            db=FAISS.from_documents(docs,embeddings)
+
+            retriever=db.as_retriever()
+            result=retriever.invoke(data)
+            print(f"Result from retriever: {result[0].page_content}")
+            context.append({
+                'file': file_path,
+                'content': result,
+            })                
         except Exception as e:
             print(f"Error processing {file_path}: {e}")
             continue
-
-    # Sort context by similarity score
-    # context.sort(key=lambda x: x['similarity_score'], reverse=True)
-    
-    # Prepare context string for final response
-    context_str = "\n".join([
-        f"File: {item['file']}\nContent: {item['content']}\nSimilarity Score: {item['similarity_score']:.4f}\n"
-        for item in context
-    ])
-
+    print(f"Final context: {context}")
     user_proxy.send(
         recipient=getDetailsAgent,
         message=f"""
         Query: {data}
         
         Context from relevant documents:
-        {context_str}
+        {context}
         
         Please provide a comprehensive answer based on the above context.
         """
     )
     final_response = getDetailsAgent.generate_reply(sender=user_proxy)
     user_proxy.receive(sender=getDetailsAgent, message=final_response)
-    print(final_response)
+    print(f"Final response: {final_response}")
 
 
     return final_response

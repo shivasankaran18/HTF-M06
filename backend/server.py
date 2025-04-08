@@ -39,12 +39,21 @@ async def getuserquery(request: Request):
     data=await request.json()
     print(data['data'])
     response= handle_user_query(data['data'])
-    await asyncio.sleep(1)
-    if("more than" in data['data']):
-        return JSONResponse(content={"status": "success", "result": "Query processed successfully","response":'''Regarding your request to fetch invoices where the total amount exceeds $150 — I've reviewed the records and found that the invoices from Flipkart and Azure Interior meet the criteria. Both of these invoices have totals greater than $150, with Azure Interior's invoice totaling $279.84. Let me know if you need the files or any additional details from them.
+    # await asyncio.sleep(1)
+    # if("more than" in data['data']):
+        # return JSONResponse(content={"status": "success", "result": "Query processed successfully","response":'''Regarding your request to fetch invoices where the total amount exceeds $150 — I've reviewed the records and found that the invoices from Flipkart and Azure Interior meet the criteria. Both of these invoices have totals greater than $150, with Azure Interior's invoice totaling $279.84. Let me know if you need the files or any additional details from them.
+        # '''})
+    # if("less than" in data['data']):
+    #     return JSONResponse(content={"status": "success", "result": "Query processed successfully","response":'''Regarding your request to fetch invoices where the total amount is less than $150 — I've reviewed the records and found that the invoice from Amazon meets the criteria. This invoice has a total of $149.99. Let me know if you need the file or any additional details from it.
+    #     '''})
+    # if("total amount" in data['data']):
+    #     return JSONResponse(content={"status": "success", "result": "Query processed successfully","response":'''Regarding your request to fetch invoices where the total amount is less than $150 — I've reviewed the records and found that the invoice from Amazon meets the criteria. This invoice has a total of $149.99. Let me know if you need the file or any additional details from it.
+    #     '''})
+    # if("Hi" in data['data']):
+    #     return JSONResponse(content={"status": "success", "result": "Query processed successfully","response":'''Hello! How can I assist you today? If you have any questions or need help, feel free to ask.
+    #     '''})
 
-        '''})
-
+    return JSONResponse(content={"status": "success", "result": "Query processed successfully","response": response})
     
 @app.post("/getfileinfo")
 async def analysisFolder(request: Request):
