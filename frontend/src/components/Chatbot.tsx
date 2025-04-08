@@ -102,7 +102,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
           feedback: feedbackRating
         });
         const botMessage: Message = {
-          text: response.data.response.content,  
+          text: response.data.result.content,  
           isUser: false,
           timestamp: new Date()
         };
