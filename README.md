@@ -34,30 +34,30 @@ This project leverages LLM-based agents, embeddings, reinforcement learning, and
 
 ## ⚙️ Technologies Used
 
--🧠 Gemma 2B / Ollama Embeddings
+- 🧠 Gemma 2B / Ollama Embeddings
 
--🤖 AutoGen & Phidata Agents
+- 🤖 AutoGen & Phidata Agents
 
--🔴 Redis for fast in-memory doc-keyword lookup
+- 🔴 Redis for fast in-memory doc-keyword lookup
 
--🧾 LangChain for document loading and chunking
+- 🧾 LangChain for document loading and chunking
 
--🎯 PyTorch for RL-based document reranking
+- 🎯 PyTorch for RL-based document reranking
 
--📄 PDF Parsing using PyPDF2 and PyMuPDF
+- 📄 PDF Parsing using PyPDF2 and PyMuPDF
 
--📈 Cosine Similarity via Scikit-learn
+- 📈 Cosine Similarity via Scikit-learn
 
 
 ## 🧪 Running the Project
 
 🔧 Prerequisites:
 
--Redis running locally or via Docker
+- Redis running locally or via Docker
 
--Python 3.9+
+- Python 3.9+
 
--Ollama / Hugging Face token configured for embeddings
+- Ollama / Hugging Face token configured for embeddings
 
 
 ## 🛠 Install Dependencies
