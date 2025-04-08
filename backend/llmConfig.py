@@ -1,6 +1,6 @@
 llm_config = {
-    "model": "llama2",
-    "api_key": "ollama", 
-    "base_url": "http://localhost:11434/v1",
+"model": "gemma2-9b-it",
+    "api_key": "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",
+    "base_url": "https://api.groq.com/openai/v1",
     "temperature": 0.3,
 }

@@ -6,7 +6,7 @@ from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-
+from redis import get_from_redis
 # Initialize embeddings
 embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
@@ -68,9 +68,9 @@ def handle_user_query(data):
 
     redis_client = redis.Redis(host='localhost', port=6379, db=0)
     files = []
-    for val in redis_client.keys():
-        if response.content in val:
-            files.append(val)
+    for key in redis_client.keys():
+        if response.content in get_from_redis(key):
+            files.append(key)
     print(files)
 
     # Get relevant context from files
