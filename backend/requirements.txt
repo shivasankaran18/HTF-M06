@@ -5,3 +5,6 @@ uvicorn
 docx
 google-generativeai
 duckduckgo-search
+redis
+langchain
+sentence-transformers
