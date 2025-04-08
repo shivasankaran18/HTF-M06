@@ -2,3 +2,6 @@ fastapi
 autogen
 PyPDF2
 uvicorn
+redis
+langchain
+sentence-transformers

@@ -12,3 +12,10 @@ def analysisFolder():
     data=request.get_json()
     print(data)
     analyze_folder(data)
+
+@app.post("/getuserquery")
+def getuserquery():
+    data=request.get_json()
+    handle_user_query(data)
+
+    
