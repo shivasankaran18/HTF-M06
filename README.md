@@ -66,7 +66,13 @@ This project leverages LLM-based agents, embeddings, reinforcement learning, and
 
 ## 🛠 Install Dependencies
 
-<pre> pip install -r requirements.txt </pre>
+<details> <summary>🔧 <b>Using <code>npm</code></b></summary>
+bash
+Copy
+Edit
+npm i @shivasankaran18/stackd
+npx stackd init
+</details> 
 
 ## 🚀 Run Main Pipeline
 
