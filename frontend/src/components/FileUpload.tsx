@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 
 interface FileUploadProps {
   onFilesUploaded: (files: File[]) => void;
-  onDirectoryStructure: (structure: DirectoryStructure) => void;
+  onDirectoryStructure?: (structure: DirectoryStructure) => void;
 }
 
 export interface DirectoryStructure {
@@ -123,7 +123,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFilesUploaded, onDirectoryStr
       });
       
       onFilesUploaded(uploadedFiles);
-      onDirectoryStructure(directoryStructure.length === 1 ? directoryStructure[0] : {
+      onDirectoryStructure?.(directoryStructure.length === 1 ? directoryStructure[0] : {
         name: 'root',
         path: '/',
         type: 'directory',
