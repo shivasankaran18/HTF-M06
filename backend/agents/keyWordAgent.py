@@ -1,18 +1,19 @@
 from autogen import AssistantAgent, UserProxyAgent
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 llm_config = {
     "model": "gemma2-9b-it",
-    "api_key": "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",
+    "api_key": GROQ_API_KEY,
     "base_url": "https://api.groq.com/openai/v1",
     "temperature": 0.3,
 }
-
 keyword_extractor_agent = AssistantAgent(
     name="query_analyzer",
     llm_config=llm_config,
     system_message="""
 You are an intelligent query analyzer.
-
 Your task is:
 - Extract only keywords related to company names, document types (like Invoice or Delivery Challan).
 
@@ -26,8 +27,6 @@ Rules:
 
 """
 )
-
-# === User Proxy ===
 user_proxy = UserProxyAgent(
     name="UserProxyAgent",
     human_input_mode="NEVER",

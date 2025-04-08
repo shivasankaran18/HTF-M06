@@ -4,10 +4,16 @@ from autogen import AssistantAgent, UserProxyAgent
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 from agents.keyWordAgent import keyword_extractor_agent,user_proxy
+import os
+from dotenv import load_dotenv
+from agents.userAgent import promptingAgent,getDetailsAgent
+
+load_dotenv()
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 llm_config = {
 "model": "gemma2-9b-it",
-    "api_key": "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",
+    "api_key": GROQ_API_KEY,
     "base_url": "https://api.groq.com/openai/v1",
     "temperature": 0.3,
 }

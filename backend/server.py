@@ -11,10 +11,9 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins
-   
-     allow_methods=["GET", "POST", "OPTIONS"],
-      allow_headers=[
+    allow_origins=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=[
             "Access-Control-Allow-Origin",
             "Referer",
             "Set-Cookie",
@@ -35,8 +34,8 @@ def read_root():
 @app.post("/getuserquery")
 async def getuserquery(request: Request):
     data=await request.json()
-    print(data['data'])
-    response= handle_user_query(data['data'])
+    print(data)
+    response= handle_user_query(data)
     await asyncio.sleep(1)
     if("more than" in data['data']):
         return JSONResponse(content={"status": "success", "result": "Query processed successfully","response":'''Regarding your request to fetch invoices where the total amount exceeds $150 — I've reviewed the records and found that the invoices from Flipkart and Azure Interior meet the criteria. Both of these invoices have totals greater than $150, with Azure Interior's invoice totaling $279.84. Let me know if you need the files or any additional details from them.
@@ -50,12 +49,4 @@ async def analysisFolder(request: Request):
     print(data['data'])
     result = analyze_folder(data['data'])
     return JSONResponse(content={"status": "success", "result": result})
-
-
-# @app.post("/testpdf")
-# async def testpdf(request: Request):
-#     data = await request.json()
-#     print(data['data'])
-#     result = fn(data['data'])
-#     return JSONResponse(content={"status": "success", "result": result})  // this is a test for pdf parsing
 

@@ -8,7 +8,6 @@ llm_config = {
     "base_url": "https://api.groq.com/openai/v1",
     "temperature": 0.3,
 }
-
 def extract_text_from_pdf(pdf_path):
     reader = PdfReader(pdf_path)
     text = ""
