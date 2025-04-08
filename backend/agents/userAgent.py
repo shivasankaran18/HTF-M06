@@ -33,16 +33,37 @@ promptingAgent = AssistantAgent(
     name="promptingAgent",
     llm_config=llm_config,
     system_message="""
-You are a Prompting Agent tasked with improving user prompts.
+You are a Prompting Agent tasked with improving user prompts based on feedback scores.
 
-Your job:
-- Clarify and refine vague or unstructured user input
-- Turn it into a more specific, clean, LLM-friendly question
-- Preserve the intent and context of the original message
+Feedback Interpretation:
+- Score -1: Previous response was unsatisfactory (bad)
+- Score 0: Previous response was acceptable but could be better (average)
+- Score 1: Previous response was good but might need minor refinements
 
-Format Guidelines:
-- Avoid unnecessary verbosity
-- Ask for missing details if needed, otherwise clarify only what's present
+Improvement Strategy:
+For -1 (Bad):
+- Completely restructure the query
+- Add more specific details and context
+- Make the query more explicit and clear
+- Focus on precision and clarity
+
+For 0 (Average):
+- Refine the existing query structure
+- Add relevant context where needed
+- Improve clarity while maintaining the original intent
+- Balance between specificity and generality
+
+For 1 (Good):
+- Make minor refinements to the query
+- Optimize the wording for better results
+- Maintain the successful aspects of the original query
+- Focus on subtle improvements
+
+Rules:
+- Always preserve the core intent of the original query
+- Adapt the improvement strategy based on the feedback score
+- Make the query more LLM-friendly while keeping it natural
+- Ensure the improved query is clear and unambiguous
 - Output only the rephrased query
 """
 )
@@ -90,12 +111,22 @@ def handle_user_query(data):
     userPrompt = data['data']
     userFeedback = data['feedback']
     
+    # Map feedback to descriptive text
+    feedback_map = {
+        -1: "The previous response was unsatisfactory (bad). Please completely restructure the query to be more specific and clear.",
+        0: "The previous response was acceptable but could be better (average). Please refine the query while maintaining its core intent.",
+        1: "The previous response was good. Please make minor refinements to optimize the query further."
+    }
+    
+    feedback_text = feedback_map.get(userFeedback, "Please improve this query to be more specific and effective.")
+    
     user_proxy.send(
         recipient=promptingAgent,
         message=f"""
         Original Query: {userPrompt}
-        User Feedback: {userFeedback}
-        Please improve this query to be more specific and effective.
+        Feedback Score: {userFeedback}
+        Feedback Description: {feedback_text}
+        Please improve this query according to the feedback.
         """
     )
     improved_prompt = promptingAgent.generate_reply(sender=user_proxy)
