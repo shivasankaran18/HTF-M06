@@ -1,20 +1,30 @@
 # 🚀 HackToFuture 3.0 Repository Setup Guide
-#### To track your progress and collaborate effectively, every team must fork the official repository and follow the steps below.
-<br>
 
-# 🔱 Fork the Repository
- #### Go to the GitHub page https://github.com/HackToFuture/HTF-XNN <br>
-  #### Click on the "Fork" button in the upper-right corner of the page.
-  #### Assign the repository name as "HTF - *<Team_Code>*".
+# 🧠 HTF-M06 — AI-Powered Document Intelligence System
 
-  <img align="center" width = "500" src = "https://docs.github.com/assets/cb-40742/mw-1440/images/help/repository/fork-button.webp" alt="fork image"/>
-  
-  
-  ```
-  Example :
-  <Team_Code> -> A09
-  Repository Name : HTF-A09
-```
+Welcome to the repository for **HTF-M06**, an intelligent agentic system designed to extract relevant answers from large collections of unstructured documents such as PDFs, reports, invoices, and policy files.
+
+This project leverages LLM-based agents, embeddings, reinforcement learning, and Redis-backed storage to deliver **accurate, feedback-driven document query resolution**.
+
+---
+
+## 🚀 Features
+
+- ✅ **User Query Handling**: Accepts freeform user queries.
+- 🤖 **Autogen Agents**:
+  - `Prompting Agent`: Refines queries based on feedback.
+  - `Keyword Extraction Agent`: Pulls key topics from improved queries.
+  - `Details Extraction Agent`: Analyzes documents and composes answers.
+- 🔍 **Semantic Search**: Embeds and compares document topics using `Gemma 2B` (via Ollama).
+- 🧠 **RL-based Document Ranking**: Trains a neural policy model to learn better file ranking from feedback.
+- ⚡ **Redis Integration**: Stores file-topic pairs and supports fast lookup without traditional vector DBs.
+- 📄 **PDF Parsing**: Converts unstructured PDF documents into searchable text chunks.
+
+---
+
+## 📁 Folder Structure
+
+
 
 # 📥 Clone Your Forked Repository
   #### Go to your forked repository on GitHub.
