@@ -32,6 +32,8 @@ This project leverages LLM-based agents, embeddings, reinforcement learning, and
 
 ## 🎥 Demo
 
+---
+
 ## ⚙️ Technologies Used
 
 - 🧠 Gemma 2B / Ollama Embeddings
@@ -48,6 +50,7 @@ This project leverages LLM-based agents, embeddings, reinforcement learning, and
 
 - 📈 Cosine Similarity via Scikit-learn
 
+---
 
 ## 🧪 Running the Project
 
@@ -59,6 +62,7 @@ This project leverages LLM-based agents, embeddings, reinforcement learning, and
 
 - Ollama / Hugging Face token configured for embeddings
 
+---
 
 ## 🛠 Install Dependencies
 
