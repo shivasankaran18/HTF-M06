@@ -62,8 +62,7 @@ This project leverages LLM-based agents, embeddings, reinforcement learning, and
 
 ## 🛠 Install Dependencies
 
-pip install -r requirements.txt
-
+<pre> ```bash pip install -r requirements.txt ``` </pre>
 # 📥 Clone Your Forked Repository
   #### Go to your forked repository on GitHub.
   #### Click the green "Code" button, then click the clipboard icon to copy the URL.
