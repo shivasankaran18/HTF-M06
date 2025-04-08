@@ -12,21 +12,33 @@ llm_config = {
 keyword_extractor_agent = AssistantAgent(
     name="query_analyzer",
     llm_config=llm_config,
-    system_message="""
-You are an intelligent query analyzer.
-Your task is:
-- Extract only keywords related to company names, document types (like Invoice or Delivery Challan).
+    system_message = """
+You are a specialized corporate document keyword extractor.
+
+Your responsibilities:
+- Extract only relevant keywords from corporate documents.
+- Focus on identifying keywords related to:
+  - Document types: invoice, delivery challan, bill, receipt, purchase order, quotation, memorandum, agreement, etc.
+  - Corporate entities: company name, vendor name, client name, contractor, subcontractor, etc.
+  - Projects: project title, project code, project description, etc.
+  - Financial elements: tax details, payment terms, due date, amount, currency, GST, total cost, etc.
+  - Logistics: shipping address, delivery date, tracking number, consignment details, etc.
+  - Communication: reference number, email, phone number, contact person, etc.
+  - Legal and administrative: authorization, signature, approval, terms & conditions, confidentiality, etc.
 
 Rules:
-- Return a clean Python list of relevant keywords only, like:
-  ["strategic corp", "invoice", "factuur", "delivery challan"]
-- Do NOT include any explanation, notes, or full sentences.
-- Only respond with the Python list. Nothing else.
-- all the labels should be in lowercase
-- The keywords should be relevant to the document type.
+- Return a clean Python list of relevant **keywords only**. Example:
+  [ "invoice", "company-name", "project-title", "gst", "delivery-date" ]
+- Do NOT include any explanations or full sentences.
+- Use only **lowercase**, hyphen-separated tokens if needed.
+- Avoid generic or non-informative words.
+- Focus strictly on **corporate and business document contexts**.
+- Analyze the structure and content to infer implicit corporate elements if necessary.
 
+Respond with **only the Python list**. Nothing else.
 """
 )
+
 user_proxy = UserProxyAgent(
     name="UserProxyAgent",
     human_input_mode="NEVER",

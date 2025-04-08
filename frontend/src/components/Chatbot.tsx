@@ -40,7 +40,8 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() && selectedFiles.length === 0) return;
-
+    console.log(input);
+    console.log(selectedFiles)
     const userMessage: Message = {
       text: input || "Analyzing attached files...",
       isUser: true,
@@ -55,19 +56,28 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
     console.log(input)
 
     try {
-
-      const response = await axios.post("http://localhost:8000/getuserquery", {
-        data: input  
-      });
-
-
-      const botMessage: Message = {
-        text: response.data.response,  
-        isUser: false,
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, botMessage]);
-      // setIsLoading(false);
+      const files = selectedFiles.map(file => ({  
+        name: file.name,
+      }));
+      if(selectedFiles.length > 0) {
+        const response = await axios.post("http://localhost:8000/getspecificfileinfo",{
+          data : input,
+          files : files,
+          feedback : 1
+        })
+      }
+      else {
+        const response = await axios.post("http://localhost:8000/getuserquery", {
+          data : input,
+          feedback : 1
+        });
+        const botMessage: Message = {
+          text: response.data.response,  
+          isUser: false,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, botMessage]);
+      }
     } catch (error) {
       console.error('Error sending message:', error);
  
