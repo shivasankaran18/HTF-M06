@@ -28,7 +28,7 @@ const ChatPage: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen flex flex-col"
+      className="min-h-screen flex flex-col bg-[#FFFDF2]"
     >
       <Navbar 
         userName="Shiva"
@@ -41,7 +41,7 @@ const ChatPage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="max-w-4xl mx-auto"
+          className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6"
         >
           <Chatbot 
             uploadedFiles={uploadedFiles}
@@ -53,4 +53,4 @@ const ChatPage: React.FC = () => {
   );
 };
 
-export default ChatPage; 
+export default ChatPage;
