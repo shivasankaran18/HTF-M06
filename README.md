@@ -1,11 +1,12 @@
 
 # 🧠 HTF-M06 — AI-Powered Document Intelligence System
 
-Welcome to the repository for **HTF-M06**, an intelligent agentic system designed to extract relevant answers from large collections of unstructured documents such as PDFs, reports, invoices, and policy files.
+An intelligent agentic system designed to extract relevant answers from large collections of unstructured documents such as PDFs, reports, invoices, and policy files.
 
 This project leverages LLM-based agents, embeddings, reinforcement learning, and Redis-backed storage to deliver **accurate, feedback-driven document query resolution**.
 
 ---
+
 ## Architecture Diagram
 
 ![image](https://github.com/user-attachments/assets/8dd8d084-fa40-4abd-a44c-be0362741b55)
@@ -14,9 +15,9 @@ This project leverages LLM-based agents, embeddings, reinforcement learning, and
 
 ## 🚀 Features
 
-- ✅ **User Query Handling**: Accepts freeform user queries.
+-  **User Query Handling**: Accepts freeform user queries.
   
-- 🤖 **Autogen Agents**:
+-  **Autogen Agents**:
   
   - `Prompting Agent`: Refines queries based on feedback.
   
@@ -24,13 +25,13 @@ This project leverages LLM-based agents, embeddings, reinforcement learning, and
   
   - `Details Extraction Agent`: Analyzes documents and composes answers.
   
-- 🔍 **Semantic Search**: Embeds and compares document topics using `Gemma 2B` (via Ollama).
+-  **Semantic Search**: Embeds and compares document topics using `Gemma 2B` (via Ollama).
   
-- 🧠 **RL-based Document Ranking**: Trains a neural policy model to learn better file ranking from feedback.
+-  **RL-based Document Ranking**: Trains a neural policy model to learn better file ranking from feedback.
   
-- ⚡ **Redis Integration**: Stores file-topic pairs and supports fast lookup without traditional vector DBs.
+-  **Redis Integration**: Stores file-topic pairs and supports fast lookup without traditional vector DBs.
   
-- 📄 **PDF Parsing**: Converts unstructured PDF documents into searchable text chunks.
+-  **PDF Parsing**: Converts unstructured PDF documents into searchable text chunks.
 
 ---
 
@@ -40,19 +41,33 @@ This project leverages LLM-based agents, embeddings, reinforcement learning, and
 
 ## ⚙️ Technologies Used
 
-- 🧠 Gemma 2B / Ollama Embeddings
+# Frontend
 
-- 🤖 AutoGen & Phidata Agents
+- React.js
 
-- 🔴 Redis for fast in-memory doc-keyword lookup
+- React Typescript
 
-- 🧾 LangChain for document loading and chunking
+# Backend
 
-- 🎯 PyTorch for RL-based document reranking
+- Fastapi
 
-- 📄 PDF Parsing using PyPDF2 and PyMuPDF
+- Python
 
-- 📈 Cosine Similarity via Scikit-learn
+# Agentic AI
+  
+-  Gemma 2B / Ollama Embeddings
+
+-  AutoGen & Phidata Agents
+
+-  Redis for fast in-memory doc-keyword lookup
+
+-  LangChain for document loading and chunking
+
+-  PyTorch for RL-based document reranking
+
+-  PDF Parsing using PyPDF2 and PyMuPDF
+
+-  Cosine Similarity via Scikit-learn
 
 ---
 
