@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, FileText, X, Paperclip, FolderTree, File, Folder, ChevronRight, ChevronDown } from 'lucide-react';
 import { DirectoryStructure } from './FileUpload';
+import axios from 'axios';
 
 interface ChatbotProps {
   uploadedFiles: File[];
@@ -28,6 +29,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
   const [showFileSelector, setShowFileSelector] = useState(false);
   const [showDirectoryExplorer, setShowDirectoryExplorer] = useState(true);
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(['/']));
+  const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -35,38 +37,49 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() && selectedFiles.length === 0) return;
 
-    setMessages(prev => [...prev, { 
+    const userMessage: Message = {
       text: input || "Analyzing attached files...",
       isUser: true,
       attachedFiles: selectedFiles.length > 0 ? selectedFiles : undefined,
       timestamp: new Date()
-    }]);
-
-    setTimeout(() => {
-      let response = "";
-      
-      if (selectedFiles.length > 0) {
-        response = `I'm analyzing the following files: ${selectedFiles.map(f => f.name).join(', ')}`;
-      } else if (input.toLowerCase().includes("directory") || input.toLowerCase().includes("folder")) {
-        response = "I can help you understand the structure of your uploaded directories.";
-      } else {
-        response = "I'm processing your request. This is a demo response.";
-      }
-
-      setMessages(prev => [...prev, {
-        text: response,
-        isUser: false,
-        timestamp: new Date()
-      }]);
-    }, 1000);
-
+    };
+    setMessages(prev => [...prev, userMessage]);
     setInput('');
     setSelectedFiles([]);
     setShowFileSelector(false);
+    setIsLoading(true);
+    console.log(input)
+
+    try {
+
+      const response = await axios.post("http://localhost:8000/getuserquery", {
+        data: input  
+      });
+
+
+      const botMessage: Message = {
+        text: response.data.response,  
+        isUser: false,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, botMessage]);
+      // setIsLoading(false);
+    } catch (error) {
+      console.error('Error sending message:', error);
+ 
+      const errorMessage: Message = {
+        text: "Sorry, I encountered an error while processing your request. Please try again.",
+        isUser: false,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const toggleFileSelection = (file: File) => {
@@ -282,6 +295,24 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
                 </div>
               </motion.div>
             ))}
+            {/* {isLoading && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex justify-start mb-4"
+              >
+                <div className="space-y-2 max-w-[80%]">
+                  <motion.div
+                    className="rounded-2xl px-4 py-2 bg-gradient-to-r from-gray-100 to-teal-100 text-gray-800"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-teal-500"></div>
+                      <span>Thinking...</span>
+                    </div>
+                  </motion.div>
+                </div>
+              </motion.div>
+            )} */}
             <div ref={chatEndRef} />
           </AnimatePresence>
         </div>
@@ -416,6 +447,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
               className="px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-lg shadow-lg"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={handleSubmit}
             >
               <Send size={20} />
             </motion.button>

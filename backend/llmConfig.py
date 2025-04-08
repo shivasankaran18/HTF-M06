@@ -4,3 +4,6 @@ llm_config = {
     "base_url": "https://api.groq.com/openai/v1",
     "temperature": 0.3,
 }
+
+def get_llm_config():
+    return llm_config
