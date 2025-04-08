@@ -1,7 +1,7 @@
 
 # 🧠 HTF-M06 — AI-Powered Document Intelligence System
 
-An intelligent agentic system designed to extract relevant answers from large collections of unstructured documents such as PDFs, reports, invoices, and policy files.
+An Autonomous Document Intelligence Agent uses AI to extract, analyze, and structure data from unstructured documents automatically, enhancing workflow efficiency and decision-making. An intelligent agentic system designed to extract relevant answers from large collections of unstructured documents such as PDFs, reports, invoices, and policy files.
 
 This project leverages LLM-based agents, embeddings, reinforcement learning, and Redis-backed storage to deliver **accurate, feedback-driven document query resolution**.
 
@@ -65,7 +65,7 @@ This project leverages LLM-based agents, embeddings, reinforcement learning, and
 
 -  PyTorch for RL-based document reranking
 
--  PDF Parsing using PyPDF2 and PyMuPDF
+-  PDF Parsing using PyPDF2
 
 -  Cosine Similarity via Scikit-learn
 
