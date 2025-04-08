@@ -11,13 +11,21 @@ This project leverages LLM-based agents, embeddings, reinforcement learning, and
 ## 🚀 Features
 
 - ✅ **User Query Handling**: Accepts freeform user queries.
+  
 - 🤖 **Autogen Agents**:
+  
   - `Prompting Agent`: Refines queries based on feedback.
+  
   - `Keyword Extraction Agent`: Pulls key topics from improved queries.
+  
   - `Details Extraction Agent`: Analyzes documents and composes answers.
+  
 - 🔍 **Semantic Search**: Embeds and compares document topics using `Gemma 2B` (via Ollama).
+  
 - 🧠 **RL-based Document Ranking**: Trains a neural policy model to learn better file ranking from feedback.
+  
 - ⚡ **Redis Integration**: Stores file-topic pairs and supports fast lookup without traditional vector DBs.
+  
 - 📄 **PDF Parsing**: Converts unstructured PDF documents into searchable text chunks.
 
 ---
