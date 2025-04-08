@@ -41,6 +41,31 @@ Respond with **only the Python list**. Nothing else.
 """
 )
 
+
+queryKeyWordAgent = AssistantAgent(
+    name="queryKeyWordAgent",
+    llm_config=llm_config,
+    system_message="""
+        You are a focused keyword extractor.
+        
+        Your ONLY task is to extract **existing keywords from the USER QUERY**. Do not add or generate anything that is not present in the input query.
+
+        Your extraction should focus on the following categories ONLY IF they appear in the user query:
+        - Document types: invoice, delivery challan, bill, receipt, purchase order, quotation, memorandum, agreement, etc.
+        - Corporate entities: company names (e.g., AWS, Microsoft), vendor, client, contractor, subcontractor, etc.
+        - Projects: project title, project code, project description.
+        - Financial elements: tax, GST, total cost, payment terms, due date, currency, amount, etc.
+        - Logistics: shipping address, delivery date, tracking number, consignment details, etc.
+        - Communication: reference number, email, phone number, contact person, etc.
+        - Legal/admin: authorization, approval, signature, terms & conditions, confidentiality, etc.
+        - Dates and time indicators: day names (Monday, Friday), month names (January, December), specific dates if mentioned.
+
+        Do NOT infer, guess, or include keywords that are not explicitly mentioned in the user query.
+        Do NOT explain or elaborate—just return a clean list of keywords present in the query.
+    """
+)
+
+
 user_proxy = UserProxyAgent(
     name="UserProxyAgent",
     human_input_mode="NEVER",

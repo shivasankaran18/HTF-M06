@@ -15,6 +15,7 @@ from PyPDF2 import PdfReader
 from dotenv import load_dotenv
 from langchain_community.vectorstores import FAISS
 from langchain.document_loaders import PyPDFLoader
+from agents.keyWordAgent import queryKeyWordAgent
 
 load_dotenv()
 
@@ -184,14 +185,13 @@ def handle_user_query(data):
 
     # Step 3: Send improved prompt to keyword extractor agent
     user_proxy.send(
-        recipient=keyword_extractor_agent,
+        recipient= queryKeyWordAgent,
         message=f"{improved_prompt}"
     )
 
-    reply = keyword_extractor_agent.generate_reply(sender=user_proxy)
-    user_proxy.receive(sender=keyword_extractor_agent, message=reply)
+    reply = queryKeyWordAgent.generate_reply(sender=user_proxy)
+    user_proxy.receive(sender=queryKeyWordAgent, message=reply)
 
-    # Step 4: Extract and embed keywords
     try:
         parsedString = reply[1:len(reply) - 3]
         topics = parsedString.split(",")
