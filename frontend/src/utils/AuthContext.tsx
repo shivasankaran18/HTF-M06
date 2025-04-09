@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -10,13 +10,15 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<any | null>(null);
 
   useEffect(() => {
     // Check if user is logged in from localStorage
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
       setIsAuthenticated(true);
@@ -26,12 +28,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     try {
       // TODO: Implement actual login logic with your backend
-      const mockUser = { email, name: 'Test User' };
+      const mockUser = { email, name: "Test User" };
       setUser(mockUser);
       setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(mockUser));
+      localStorage.setItem("user", JSON.stringify(mockUser));
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
       throw error;
     }
   };
@@ -42,9 +44,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const mockUser = { email, name };
       setUser(mockUser);
       setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(mockUser));
+      localStorage.setItem("user", JSON.stringify(mockUser));
     } catch (error) {
-      console.error('Signup failed:', error);
+      console.error("Signup failed:", error);
       throw error;
     }
   };
@@ -52,11 +54,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
-    localStorage.removeItem('user');
+    localStorage.removeItem("user");
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, signup, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, user, login, signup, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -65,7 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
-}; 
+};

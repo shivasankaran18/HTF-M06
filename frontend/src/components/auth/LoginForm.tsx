@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
-import { useAuth } from '../../utils/AuthContext';
-import { motion } from 'framer-motion';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { useAuth } from "../../utils/AuthContext";
+import { motion } from "framer-motion";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -14,20 +14,20 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       await login(email, password);
-      toast.success('Login successful!', {
+      toast.success("Login successful!", {
         style: {
-          background: '#FFFDF2',
-          color: '#000000',
-          borderRadius: '1rem',
+          background: "#FFFDF2",
+          color: "#000000",
+          borderRadius: "1rem",
         },
       });
-      navigate('/upload');
+      navigate("/upload");
     } catch (error) {
-      toast.error('Login failed. Please try again.', {
+      toast.error("Login failed. Please try again.", {
         style: {
-          background: '#FFFDF2',
-          color: '#000000',
-          borderRadius: '1rem',
+          background: "#FFFDF2",
+          color: "#000000",
+          borderRadius: "1rem",
         },
       });
     }
@@ -40,7 +40,7 @@ const LoginForm = () => {
       exit={{ opacity: 0 }}
       className="min-h-screen flex flex-col items-center justify-center bg-[#FFFDF2] py-12 px-4 sm:px-6 lg:px-8"
     >
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
@@ -48,7 +48,7 @@ const LoginForm = () => {
       >
         DocuMind
       </motion.div>
-      
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -103,13 +103,19 @@ const LoginForm = () => {
                 type="checkbox"
                 className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+              <label
+                htmlFor="remember-me"
+                className="ml-2 block text-sm text-gray-900"
+              >
                 Remember me
               </label>
             </div>
 
             <div className="text-sm">
-              <a href="#" className="font-medium text-black hover:text-gray-700">
+              <a
+                href="#"
+                className="font-medium text-black hover:text-gray-700"
+              >
                 Forgot your password?
               </a>
             </div>
@@ -128,8 +134,11 @@ const LoginForm = () => {
         </form>
         <div className="text-center">
           <p className="text-sm text-gray-600">
-            Don't have an account?{' '}
-            <a href="/signup" className="font-medium text-black hover:text-gray-700">
+            Don't have an account?{" "}
+            <a
+              href="/signup"
+              className="font-medium text-black hover:text-gray-700"
+            >
               Sign up
             </a>
           </p>

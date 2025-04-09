@@ -1,5 +1,12 @@
-import React from 'react';
-import { Document, Page, Text, View, StyleSheet, PDFViewer } from '@react-pdf/renderer';
+import React from "react";
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  PDFViewer,
+} from "@react-pdf/renderer";
 
 interface Message {
   text: string;
@@ -14,7 +21,7 @@ interface PDFReportProps {
 const styles = StyleSheet.create({
   page: {
     padding: 30,
-    backgroundColor: '#ffffff'
+    backgroundColor: "#ffffff",
   },
   section: {
     margin: 10,
@@ -23,8 +30,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginBottom: 20,
-    textAlign: 'center',
-    color: '#000000'
+    textAlign: "center",
+    color: "#000000",
   },
   messageContainer: {
     marginBottom: 10,
@@ -32,30 +39,30 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   userMessage: {
-    backgroundColor: '#e3f2fd',
-    marginLeft: 'auto',
-    maxWidth: '80%',
+    backgroundColor: "#e3f2fd",
+    marginLeft: "auto",
+    maxWidth: "80%",
   },
   botMessage: {
-    backgroundColor: '#f5f5f5',
-    marginRight: 'auto',
-    maxWidth: '80%',
+    backgroundColor: "#f5f5f5",
+    marginRight: "auto",
+    maxWidth: "80%",
   },
   messageText: {
     fontSize: 12,
-    color: '#000000',
+    color: "#000000",
   },
   timestamp: {
     fontSize: 8,
-    color: '#666666',
+    color: "#666666",
     marginTop: 5,
   },
   header: {
     fontSize: 12,
-    color: '#666666',
+    color: "#666666",
     marginBottom: 20,
-    textAlign: 'center',
-  }
+    textAlign: "center",
+  },
 });
 
 const PDFReport: React.FC<PDFReportProps> = ({ messages }) => {
@@ -64,7 +71,7 @@ const PDFReport: React.FC<PDFReportProps> = ({ messages }) => {
   };
 
   return (
-    <PDFViewer style={{ width: '100%', height: '100vh' }}>
+    <PDFViewer style={{ width: "100%", height: "100vh" }}>
       <Document>
         <Page size="A4" style={styles.page}>
           <View style={styles.section}>
@@ -82,7 +89,8 @@ const PDFReport: React.FC<PDFReportProps> = ({ messages }) => {
               >
                 <Text style={styles.messageText}>{message.text}</Text>
                 <Text style={styles.timestamp}>
-                  {message.isUser ? 'You' : 'Assistant'} - {formatDate(message.timestamp)}
+                  {message.isUser ? "You" : "Assistant"} -{" "}
+                  {formatDate(message.timestamp)}
                 </Text>
               </View>
             ))}
@@ -93,4 +101,4 @@ const PDFReport: React.FC<PDFReportProps> = ({ messages }) => {
   );
 };
 
-export default PDFReport; 
+export default PDFReport;

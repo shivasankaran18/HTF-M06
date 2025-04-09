@@ -1,12 +1,17 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
-import { AnimatePresence } from 'framer-motion';
-import UploadPage from './pages/UploadPage';
-import ChatPage from './pages/ChatPage';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import { AuthProvider } from './utils/AuthContext';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import { AnimatePresence } from "framer-motion";
+import UploadPage from "./pages/UploadPage";
+import ChatPage from "./pages/ChatPage";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import { AuthProvider } from "./utils/AuthContext";
 
 function App() {
   return (

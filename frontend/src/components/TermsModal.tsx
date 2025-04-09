@@ -1,6 +1,6 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { X } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import { X } from "lucide-react";
 
 interface TermsModalProps {
   onAccept: () => void;
@@ -22,13 +22,15 @@ const TermsModal: React.FC<TermsModalProps> = ({ onAccept, onClose }) => {
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
         className="bg-[#FFFDF2]/90 backdrop-blur-lg rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden border border-black/20"
       >
-        <motion.div 
+        <motion.div
           className="p-6 border-b border-black/20 flex justify-between items-center"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <h2 className="text-2xl font-semibold text-black">Terms and Conditions</h2>
+          <h2 className="text-2xl font-semibold text-black">
+            Terms and Conditions
+          </h2>
           <motion.button
             onClick={onClose}
             className="p-2 hover:bg-[#f5f2e8] rounded-full transition-colors"
@@ -39,7 +41,7 @@ const TermsModal: React.FC<TermsModalProps> = ({ onAccept, onClose }) => {
           </motion.button>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           className="p-6 overflow-y-auto max-h-[50vh]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -52,7 +54,10 @@ const TermsModal: React.FC<TermsModalProps> = ({ onAccept, onClose }) => {
               transition={{ delay: 0.4 }}
             >
               <h3 className="text-black">1. Acceptance of Terms</h3>
-              <p className="text-black/80">By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement.</p>
+              <p className="text-black/80">
+                By accessing and using this website, you accept and agree to be
+                bound by the terms and provision of this agreement.
+              </p>
             </motion.div>
 
             <motion.div
@@ -61,7 +66,11 @@ const TermsModal: React.FC<TermsModalProps> = ({ onAccept, onClose }) => {
               transition={{ delay: 0.5 }}
             >
               <h3 className="text-black">2. Use License</h3>
-              <p className="text-black/80">Permission is granted to temporarily download one copy of the materials (information or software) on this website for personal, non-commercial transitory viewing only.</p>
+              <p className="text-black/80">
+                Permission is granted to temporarily download one copy of the
+                materials (information or software) on this website for
+                personal, non-commercial transitory viewing only.
+              </p>
             </motion.div>
 
             <motion.div
@@ -70,7 +79,11 @@ const TermsModal: React.FC<TermsModalProps> = ({ onAccept, onClose }) => {
               transition={{ delay: 0.6 }}
             >
               <h3 className="text-black">3. Privacy Policy</h3>
-              <p className="text-black/80">Your use of this website is also governed by our Privacy Policy, which is incorporated into these terms and conditions by reference.</p>
+              <p className="text-black/80">
+                Your use of this website is also governed by our Privacy Policy,
+                which is incorporated into these terms and conditions by
+                reference.
+              </p>
             </motion.div>
 
             <motion.div
@@ -79,12 +92,16 @@ const TermsModal: React.FC<TermsModalProps> = ({ onAccept, onClose }) => {
               transition={{ delay: 0.7 }}
             >
               <h3 className="text-black">4. File Upload Guidelines</h3>
-              <p className="text-black/80">Users are responsible for the content they upload. Prohibited content includes but is not limited to malicious software, copyrighted material without permission, and illegal content.</p>
+              <p className="text-black/80">
+                Users are responsible for the content they upload. Prohibited
+                content includes but is not limited to malicious software,
+                copyrighted material without permission, and illegal content.
+              </p>
             </motion.div>
           </div>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           className="p-6 border-t border-black/20 flex justify-end gap-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

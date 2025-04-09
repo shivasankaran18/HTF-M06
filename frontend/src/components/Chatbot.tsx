@@ -1,10 +1,24 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Bot, FileText, X, Paperclip, FolderTree, File, Folder, ChevronRight, ChevronDown, FileOutput, ThumbsUp, ThumbsDown } from 'lucide-react';
-import { DirectoryStructure } from './FileUpload';
-import axios from 'axios';
-import ReactMarkdown from 'react-markdown';
-import PDFReport from './PDFReport';
+import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Send,
+  Bot,
+  FileText,
+  X,
+  Paperclip,
+  FolderTree,
+  File,
+  Folder,
+  ChevronRight,
+  ChevronDown,
+  FileOutput,
+  ThumbsUp,
+  ThumbsDown,
+} from "lucide-react";
+import { DirectoryStructure } from "./FileUpload";
+import axios from "axios";
+import ReactMarkdown from "react-markdown";
+import PDFReport from "./PDFReport";
 
 interface ChatbotProps {
   uploadedFiles: File[];
@@ -19,58 +33,66 @@ interface Message {
 }
 
 interface FeedbackData {
-  rating: 'like' | 'neutral' | 'dislike';
+  rating: "like" | "neutral" | "dislike";
   comment?: string;
 }
 
-const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) => {
+const Chatbot: React.FC<ChatbotProps> = ({
+  uploadedFiles,
+  directoryStructure,
+}) => {
   const [messages, setMessages] = useState<Message[]>([
-    { 
-      text: "I'm ready to help you analyze your files and directory structure. What would you like to know?", 
+    {
+      text: "I'm ready to help you analyze your files and directory structure. What would you like to know?",
       isUser: false,
-      timestamp: new Date()
-    }
+      timestamp: new Date(),
+    },
   ]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [showFileSelector, setShowFileSelector] = useState(false);
   const [showDirectoryExplorer, setShowDirectoryExplorer] = useState(true);
-  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(['/']));
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
+    new Set(["/"]),
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showReportGenerator, setShowReportGenerator] = useState(false);
-  const [reportPrompt, setReportPrompt] = useState('');
+  const [reportPrompt, setReportPrompt] = useState("");
   const [generatedReport, setGeneratedReport] = useState<string | null>(null);
   const [isGeneratingReport, setIsGeneratingReport] = useState(false);
   const [showPDFReport, setShowPDFReport] = useState(false);
-  
+
   // Feedback related states
   const [userInteractionCount, setUserInteractionCount] = useState(0);
   const [showFeedbackPopup, setShowFeedbackPopup] = useState(false);
   const [feedbackInterval] = useState(2); // Show feedback popup every 2 interactions
-  const [feedbackComment, setFeedbackComment] = useState('');
+  const [feedbackComment, setFeedbackComment] = useState("");
   // This state stores feedback history for potential future analytics or backend sync
   // The ESLint warning is suppressed as this is intended to be used by backend integration
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [feedbackHistory, setFeedbackHistory] = useState<FeedbackData[]>([]);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   // Check if feedback should be shown based on interaction count
   useEffect(() => {
-    console.log('User interaction count:', userInteractionCount);
-    if (userInteractionCount > 0 && userInteractionCount % feedbackInterval === 0) {
-      console.log('Showing feedback popup, count:', userInteractionCount);
+    console.log("User interaction count:", userInteractionCount);
+    if (
+      userInteractionCount > 0 &&
+      userInteractionCount % feedbackInterval === 0
+    ) {
+      console.log("Showing feedback popup, count:", userInteractionCount);
       setShowFeedbackPopup(true);
     }
   }, [userInteractionCount, feedbackInterval]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log('Form submitted');
+    console.log("Form submitted");
     e.preventDefault();
     if (!input.trim() && selectedFiles.length === 0) return;
 
@@ -78,15 +100,15 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
       text: input || "Analyzing attached files...",
       isUser: true,
       attachedFiles: selectedFiles.length > 0 ? selectedFiles : undefined,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
-    setMessages(prev => [...prev, userMessage]);
-    setInput('');
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
     setSelectedFiles([]);
     setShowFileSelector(false);
     setIsSubmitting(true);
-    console.log(input)
-    var feedbackRating=1;
+    console.log(input);
+    var feedbackRating = 1;
     // if(feedbackHistory[feedbackHistory.length - 1].rating == "like"){
     //   feedbackRating = 1;
     // } else if(feedbackHistory[feedbackHistory.length - 1].rating == "neutral"){
@@ -95,46 +117,52 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
     //   feedbackRating = -1;
     // }
     try {
-      const files = selectedFiles.map(file => ({
+      const files = selectedFiles.map((file) => ({
         name: file.name,
       }));
-      if(selectedFiles.length > 0){
-        const response = await axios.post("http://localhost:8000/getspecificfileinfo", {
-          data: input,
-          files: files,
-          feedback: feedbackRating
-        });
+      if (selectedFiles.length > 0) {
+        const response = await axios.post(
+          "http://localhost:8000/getspecificfileinfo",
+          {
+            data: input,
+            files: files,
+            feedback: feedbackRating,
+          },
+        );
         const botMessage: Message = {
-          text: response.data.result.content,  
+          text: response.data.result.content,
           isUser: false,
-          timestamp: new Date()
+          timestamp: new Date(),
         };
-        setMessages(prev => [...prev, botMessage]);
+        setMessages((prev) => [...prev, botMessage]);
       } else {
-        const response = await axios.post("http://localhost:8000/getuserquery", {
-          data: input,
-          feedback: feedbackRating
-        });
+        const response = await axios.post(
+          "http://localhost:8000/getuserquery",
+          {
+            data: input,
+            feedback: feedbackRating,
+          },
+        );
         const botMessage: Message = {
-          text: response.data.response.content,  
+          text: response.data.response.content,
           isUser: false,
-          timestamp: new Date()
+          timestamp: new Date(),
         };
-        setMessages(prev => [...prev, botMessage]);
+        setMessages((prev) => [...prev, botMessage]);
       }
-      setUserInteractionCount(prev => prev + 1);
+      setUserInteractionCount((prev) => prev + 1);
     } catch (error) {
-      console.error('Error sending message:', error);
- 
+      console.error("Error sending message:", error);
+
       const errorMessage: Message = {
         text: "Sorry, I encountered an error while processing your request. Please try again.",
         isUser: false,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
-      setMessages(prev => [...prev, errorMessage]);
-      
+      setMessages((prev) => [...prev, errorMessage]);
+
       // Still increment interaction count even on error
-      setUserInteractionCount(prev => prev + 1);
+      setUserInteractionCount((prev) => prev + 1);
     } finally {
       setIsSubmitting(false);
     }
@@ -151,10 +179,10 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
 
   const downloadReport = () => {
     if (!generatedReport) return;
-    
-    const blob = new Blob([generatedReport], { type: 'text/markdown' });
+
+    const blob = new Blob([generatedReport], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = `report-${new Date().toISOString().slice(0, 10)}.md`;
     document.body.appendChild(a);
@@ -164,32 +192,37 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
   };
 
   const toggleFileSelection = (file: File) => {
-    setSelectedFiles(prev => 
-      prev.some(f => f.name === file.name && f.size === file.size)
-        ? prev.filter(f => !(f.name === file.name && f.size === file.size))
-        : [...prev, file]
+    setSelectedFiles((prev) =>
+      prev.some((f) => f.name === file.name && f.size === file.size)
+        ? prev.filter((f) => !(f.name === file.name && f.size === file.size))
+        : [...prev, file],
     );
   };
 
   const removeSelectedFile = (fileToRemove: File, e: React.MouseEvent) => {
     e.stopPropagation();
-    setSelectedFiles(prev => prev.filter(file => !(file.name === fileToRemove.name && file.size === fileToRemove.size)));
+    setSelectedFiles((prev) =>
+      prev.filter(
+        (file) =>
+          !(file.name === fileToRemove.name && file.size === fileToRemove.size),
+      ),
+    );
   };
-  
+
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
       const filesArray = Array.from(files);
-      setSelectedFiles(prev => [...prev, ...filesArray]);
+      setSelectedFiles((prev) => [...prev, ...filesArray]);
     }
   };
-  
+
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
 
   const toggleFolder = (path: string) => {
-    setExpandedFolders(prev => {
+    setExpandedFolders((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(path)) {
         newSet.delete(path);
@@ -201,26 +234,33 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
   };
 
   const handleDragStart = (event: React.DragEvent, file: File) => {
-    event.dataTransfer.setData('application/json', JSON.stringify({
-      name: file.name,
-      size: file.size,
-      type: file.type
-    }));
-    event.dataTransfer.effectAllowed = 'copy';
+    event.dataTransfer.setData(
+      "application/json",
+      JSON.stringify({
+        name: file.name,
+        size: file.size,
+        type: file.type,
+      }),
+    );
+    event.dataTransfer.effectAllowed = "copy";
   };
 
   const handleDrop = (event: React.DragEvent) => {
     event.preventDefault();
-    
+
     try {
-      const fileData = JSON.parse(event.dataTransfer.getData('application/json'));
-      const file = uploadedFiles.find(f => f.name === fileData.name && f.size === fileData.size);
-      
+      const fileData = JSON.parse(
+        event.dataTransfer.getData("application/json"),
+      );
+      const file = uploadedFiles.find(
+        (f) => f.name === fileData.name && f.size === fileData.size,
+      );
+
       if (file) {
         toggleFileSelection(file);
       }
     } catch (error) {
-      console.error('Error handling dropped file', error);
+      console.error("Error handling dropped file", error);
     }
   };
 
@@ -229,38 +269,49 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
   };
 
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
-  const renderDirectoryItem = (item: DirectoryStructure, level: number = 0): React.ReactNode => {
+  const renderDirectoryItem = (
+    item: DirectoryStructure,
+    level: number = 0,
+  ): React.ReactNode => {
     const isExpanded = expandedFolders.has(item.path);
-    
+
     return (
       <div key={item.path} className="py-1">
-        <div 
+        <div
           className={`flex items-center gap-2 rounded-lg px-2 py-1 ${
-            item.type === 'directory' 
-              ? 'hover:bg-black/5 text-black' 
-              : 'hover:bg-black/5 text-black'
+            item.type === "directory"
+              ? "hover:bg-black/5 text-black"
+              : "hover:bg-black/5 text-black"
           } cursor-pointer ml-${level * 2}`}
-          onClick={() => item.type === 'directory' ? toggleFolder(item.path) : undefined}
-          draggable={item.type === 'file'}
-          onDragStart={item.type === 'file' && item.file ? (e) => handleDragStart(e, item.file!) : undefined}
+          onClick={() =>
+            item.type === "directory" ? toggleFolder(item.path) : undefined
+          }
+          draggable={item.type === "file"}
+          onDragStart={
+            item.type === "file" && item.file
+              ? (e) => handleDragStart(e, item.file!)
+              : undefined
+          }
         >
-          {item.type === 'directory' && (
+          {item.type === "directory" && (
             <span className="text-black">
-              {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+              {isExpanded ? (
+                <ChevronDown size={16} />
+              ) : (
+                <ChevronRight size={16} />
+              )}
             </span>
           )}
-          {item.type === 'directory' ? (
+          {item.type === "directory" ? (
             <Folder size={16} className="text-black" />
           ) : (
             <File size={16} className="text-black" />
           )}
-          <span className="truncate text-sm">
-            {item.name}
-          </span>
-          {item.type === 'file' && item.file && (
+          <span className="truncate text-sm">{item.name}</span>
+          {item.type === "file" && item.file && (
             <motion.button
               onClick={(e) => {
                 e.stopPropagation();
@@ -269,12 +320,17 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               className={`ml-auto rounded-full p-1 ${
-                selectedFiles.some(f => f.name === item.file!.name && f.size === item.file!.size)
-                  ? 'bg-black text-white'
-                  : 'bg-black/10 text-black hover:bg-black/20'
+                selectedFiles.some(
+                  (f) =>
+                    f.name === item.file!.name && f.size === item.file!.size,
+                )
+                  ? "bg-black text-white"
+                  : "bg-black/10 text-black hover:bg-black/20"
               }`}
             >
-              {selectedFiles.some(f => f.name === item.file!.name && f.size === item.file!.size) ? (
+              {selectedFiles.some(
+                (f) => f.name === item.file!.name && f.size === item.file!.size,
+              ) ? (
                 <X size={12} />
               ) : (
                 <span className="text-xs">+</span>
@@ -284,7 +340,9 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
         </div>
         {item.children && isExpanded && (
           <div>
-            {item.children.map(child => renderDirectoryItem(child, level + 1))}
+            {item.children.map((child) =>
+              renderDirectoryItem(child, level + 1),
+            )}
           </div>
         )}
       </div>
@@ -292,29 +350,30 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
   };
 
   // Function to handle feedback submission
-  const submitFeedback = (rating: 'like' | 'neutral' | 'dislike') => {
+  const submitFeedback = (rating: "like" | "neutral" | "dislike") => {
     const feedback: FeedbackData = {
       rating,
-      comment: feedbackComment.trim() || undefined
+      comment: feedbackComment.trim() || undefined,
     };
-    
+
     // Store the feedback in history for potential future analytics
-    setFeedbackHistory(prev => [...prev, feedback]);
-    
+    setFeedbackHistory((prev) => [...prev, feedback]);
+
     // Here you would typically send the feedback to the backend
-    console.log('Feedback submitted:', feedback);
-    
+    console.log("Feedback submitted:", feedback);
+
     // Reset the feedback state
-    setFeedbackComment('');
+    setFeedbackComment("");
     setShowFeedbackPopup(false);
-    
+
     // Make an API call to store the feedback with proper error handling
-    axios.post("http://localhost:8000/submit-feedback", feedback)
-      .then(response => {
+    axios
+      .post("http://localhost:8000/submit-feedback", feedback)
+      .then((response) => {
         console.log("Feedback submitted successfully:", response.data);
       })
-      .catch(error => {
-        console.error('Error submitting feedback:', error);
+      .catch((error) => {
+        console.error("Error submitting feedback:", error);
         // Still continue even if API call fails
       });
   };
@@ -334,10 +393,8 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
         <div className="p-4 border-b border-black/20">
           <div className="flex items-center gap-3">
             <Bot className="text-black" size={24} />
-            <h3 className="text-xl font-semibold text-black">
-              AI Assistant
-            </h3>
-            
+            <h3 className="text-xl font-semibold text-black">AI Assistant</h3>
+
             <div className="ml-auto flex gap-2">
               <motion.button
                 onClick={testFeedbackPopup}
@@ -349,15 +406,15 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
                   <span>Test Feedback</span>
                 </div>
               </motion.button>
-              
+
               <motion.button
                 onClick={() => setShowReportGenerator(!showReportGenerator)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`px-3 py-1 rounded-full text-sm border ${
                   showReportGenerator
-                    ? 'bg-black text-white border-black'
-                    : 'border-black text-black hover:bg-black/5'
+                    ? "bg-black text-white border-black"
+                    : "border-black text-black hover:bg-black/5"
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -365,15 +422,15 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
                   <span>Generate Report</span>
                 </div>
               </motion.button>
-              
+
               <motion.button
                 onClick={() => setShowDirectoryExplorer(!showDirectoryExplorer)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`px-3 py-1 rounded-full text-sm border ${
                   showDirectoryExplorer
-                    ? 'bg-black text-white border-black'
-                    : 'border-black text-black hover:bg-black/5'
+                    ? "bg-black text-white border-black"
+                    : "border-black text-black hover:bg-black/5"
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -392,31 +449,32 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
+                className={`flex ${message.isUser ? "justify-end" : "justify-start"}`}
               >
                 <div
                   className={`max-w-[80%] rounded-lg p-4 ${
                     message.isUser
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-100 text-gray-800'
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-100 text-gray-800"
                   }`}
                 >
                   <div className="prose prose-sm max-w-none">
                     <ReactMarkdown>{message.text}</ReactMarkdown>
                   </div>
-                  {message.attachedFiles && message.attachedFiles.length > 0 && (
-                    <div className="mt-2">
-                      {message.attachedFiles.map((file, fileIndex) => (
-                        <div
-                          key={fileIndex}
-                          className="flex items-center space-x-2 text-sm"
-                        >
-                          <FileText size={16} />
-                          <span>{file.name}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  {message.attachedFiles &&
+                    message.attachedFiles.length > 0 && (
+                      <div className="mt-2">
+                        {message.attachedFiles.map((file, fileIndex) => (
+                          <div
+                            key={fileIndex}
+                            className="flex items-center space-x-2 text-sm"
+                          >
+                            <FileText size={16} />
+                            <span>{file.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   <div className="text-xs opacity-70 mt-1">
                     {message.timestamp.toLocaleTimeString()}
                   </div>
@@ -431,7 +489,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
           {showReportGenerator && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               className="border-t border-black/20 bg-black/5 p-4"
             >
@@ -449,11 +507,12 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
                   <X size={16} />
                 </motion.button>
               </div>
-              
+
               <div className="text-sm text-black/70 mb-4">
-                This will generate a PDF report of your chat conversation, including all messages and timestamps.
+                This will generate a PDF report of your chat conversation,
+                including all messages and timestamps.
               </div>
-              
+
               <div className="flex justify-end gap-2">
                 <motion.button
                   onClick={() => setShowReportGenerator(false)}
@@ -478,7 +537,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
 
         <div className="p-4 border-t border-black/20">
           {selectedFiles.length > 0 && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               className="mb-2 flex flex-wrap gap-2"
@@ -504,18 +563,20 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
               ))}
             </motion.div>
           )}
-          
+
           <AnimatePresence>
             {showFileSelector && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 className="mb-3"
               >
                 <div className="flex flex-wrap gap-2 p-3 bg-black/5 rounded-lg max-h-[200px] overflow-y-auto">
                   <div className="w-full flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-black">Select files to attach</span>
+                    <span className="text-sm font-medium text-black">
+                      Select files to attach
+                    </span>
                     <motion.button
                       onClick={() => setShowFileSelector(false)}
                       whileHover={{ scale: 1.1 }}
@@ -525,7 +586,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
                       <X size={16} />
                     </motion.button>
                   </div>
-                  
+
                   <motion.button
                     onClick={triggerFileInput}
                     whileHover={{ scale: 1.05 }}
@@ -534,15 +595,15 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
                   >
                     <Paperclip size={16} />
                     <span>Upload new files</span>
-                    <input 
-                      type="file" 
-                      ref={fileInputRef} 
-                      onChange={handleFileInput} 
-                      className="hidden" 
-                      multiple 
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleFileInput}
+                      className="hidden"
+                      multiple
                     />
                   </motion.button>
-                  
+
                   {uploadedFiles.map((file, index) => (
                     <motion.button
                       key={index}
@@ -550,14 +611,20 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm transition-colors ${
-                        selectedFiles.some(f => f.name === file.name && f.size === file.size)
-                          ? 'bg-black text-white'
-                          : 'bg-black/10 text-black hover:bg-black/20'
+                        selectedFiles.some(
+                          (f) => f.name === file.name && f.size === file.size,
+                        )
+                          ? "bg-black text-white"
+                          : "bg-black/10 text-black hover:bg-black/20"
                       }`}
                     >
                       <FileText size={14} />
-                      <span className="max-w-[150px] truncate">{file.name}</span>
-                      {selectedFiles.some(f => f.name === file.name && f.size === file.size) && (
+                      <span className="max-w-[150px] truncate">
+                        {file.name}
+                      </span>
+                      {selectedFiles.some(
+                        (f) => f.name === file.name && f.size === file.size,
+                      ) && (
                         <motion.button
                           onClick={(e) => removeSelectedFile(file, e)}
                           whileHover={{ scale: 1.1 }}
@@ -573,9 +640,9 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
               </motion.div>
             )}
           </AnimatePresence>
-          
-          <form 
-            onSubmit={handleSubmit} 
+
+          <form
+            onSubmit={handleSubmit}
             className="flex gap-2"
             onDrop={handleDrop}
             onDragOver={handleDragOver}
@@ -593,9 +660,9 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
               type="button"
               onClick={() => setShowFileSelector(!showFileSelector)}
               className={`p-2 rounded-lg border ${
-                showFileSelector 
-                  ? 'bg-black text-white border-black' 
-                  : 'border-black/30 text-black hover:bg-black/5'
+                showFileSelector
+                  ? "bg-black text-white border-black"
+                  : "border-black/30 text-black hover:bg-black/5"
               }`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -605,7 +672,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
             </motion.button>
             <motion.button
               type="submit"
-              className={`px-4 py-2 bg-gradient-to-r from-black to-black/80 text-white rounded-lg shadow-lg ${isSubmitting ? 'opacity-70' : ''}`}
+              className={`px-4 py-2 bg-gradient-to-r from-black to-black/80 text-white rounded-lg shadow-lg ${isSubmitting ? "opacity-70" : ""}`}
               whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
               whileTap={{ scale: isSubmitting ? 1 : 0.95 }}
               disabled={isSubmitting}
@@ -627,7 +694,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
         {showDirectoryExplorer && directoryStructure && (
           <motion.div
             initial={{ opacity: 0, width: 0 }}
-            animate={{ opacity: 1, width: '300px' }}
+            animate={{ opacity: 1, width: "300px" }}
             exit={{ opacity: 0, width: 0 }}
             className="border-l border-black/20 bg-white/95 backdrop-blur-xl overflow-hidden"
           >
@@ -669,7 +736,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
           >
             <motion.div
               className="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full mx-4"
-              onClick={e => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
               initial={{ y: 20 }}
               animate={{ y: 0 }}
             >
@@ -677,15 +744,16 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
                 How's your experience with the assistant?
               </h3>
               <p className="text-black/70 mb-2">
-                Your feedback helps us improve. Would you mind sharing your thoughts?
+                Your feedback helps us improve. Would you mind sharing your
+                thoughts?
               </p>
               <p className="text-black/70 text-xs mb-6">
                 (Interaction count: {userInteractionCount})
               </p>
-              
+
               <div className="flex justify-center gap-4 mb-6">
                 <motion.button
-                  onClick={() => submitFeedback('like')}
+                  onClick={() => submitFeedback("like")}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-black/5"
@@ -695,9 +763,9 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
                   </div>
                   <span className="font-medium">I like it</span>
                 </motion.button>
-                
+
                 <motion.button
-                  onClick={() => submitFeedback('neutral')}
+                  onClick={() => submitFeedback("neutral")}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-black/5"
@@ -707,9 +775,9 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
                   </div>
                   <span className="font-medium">Neutral</span>
                 </motion.button>
-                
+
                 <motion.button
-                  onClick={() => submitFeedback('dislike')}
+                  onClick={() => submitFeedback("dislike")}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-black/5"
@@ -720,9 +788,12 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
                   <span className="font-medium">I don't like it</span>
                 </motion.button>
               </div>
-              
+
               <div className="mb-4">
-                <label htmlFor="feedbackComment" className="block text-sm font-medium text-black/70 mb-2">
+                <label
+                  htmlFor="feedbackComment"
+                  className="block text-sm font-medium text-black/70 mb-2"
+                >
                   Any additional comments? (optional)
                 </label>
                 <textarea
@@ -734,7 +805,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
                   rows={3}
                 />
               </div>
-              
+
               <div className="flex justify-end gap-2">
                 <motion.button
                   onClick={() => setShowFeedbackPopup(false)}
@@ -761,7 +832,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ uploadedFiles, directoryStructure }) 
           >
             <motion.div
               className="absolute inset-0"
-              onClick={e => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             >
               <PDFReport messages={messages} />
             </motion.div>

@@ -1,55 +1,55 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
-import { useAuth } from '../../utils/AuthContext';
-import { motion } from 'framer-motion';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { useAuth } from "../../utils/AuthContext";
+import { motion } from "framer-motion";
 
 const SignupForm = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
   const navigate = useNavigate();
   const { signup } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      toast.error('Passwords do not match', {
+      toast.error("Passwords do not match", {
         style: {
-          background: '#FFFDF2',
-          color: '#000000',
-          borderRadius: '1rem',
+          background: "#FFFDF2",
+          color: "#000000",
+          borderRadius: "1rem",
         },
       });
       return;
     }
     try {
       await signup(formData.name, formData.email, formData.password);
-      toast.success('Account created successfully!', {
+      toast.success("Account created successfully!", {
         style: {
-          background: '#FFFDF2',
-          color: '#000000',
-          borderRadius: '1rem',
+          background: "#FFFDF2",
+          color: "#000000",
+          borderRadius: "1rem",
         },
       });
-      navigate('/upload');
+      navigate("/upload");
     } catch (error) {
-      toast.error('Signup failed. Please try again.', {
+      toast.error("Signup failed. Please try again.", {
         style: {
-          background: '#FFFDF2',
-          color: '#000000',
-          borderRadius: '1rem',
+          background: "#FFFDF2",
+          color: "#000000",
+          borderRadius: "1rem",
         },
       });
     }
@@ -150,8 +150,11 @@ const SignupForm = () => {
         </form>
         <div className="text-center">
           <p className="text-sm text-gray-600">
-            Already have an account?{' '}
-            <a href="/login" className="font-medium text-black hover:text-gray-700">
+            Already have an account?{" "}
+            <a
+              href="/login"
+              className="font-medium text-black hover:text-gray-700"
+            >
               Sign in
             </a>
           </p>
