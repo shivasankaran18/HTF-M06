@@ -160,7 +160,6 @@ def handle_user_query(data):
     userPrompt = data['data']
     userFeedback = data['feedback']
 
-    # Step 1: Feedback description mapping
     feedback_map = {
         -1: "The previous response was unsatisfactory (bad). Please completely restructure the query to be more specific and clear.",
         0: "The previous response was acceptable but could be better (average). Please refine the query while maintaining its core intent.",
@@ -169,7 +168,7 @@ def handle_user_query(data):
 
     feedback_text = feedback_map.get(userFeedback, "Please improve this query to be more specific and effective.")
 
-    # Step 2: Send original prompt + feedback to prompting agent
+ 
     user_proxy.send(
         recipient=promptingAgent,
         message=f"""
