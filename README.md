@@ -57,7 +57,7 @@ This project leverages LLM-based agents, embeddings, reinforcement learning, and
   
 -  Gemma 2B / Ollama Embeddings
 
--  AutoGen & Phidata Agents
+-  AutoGen (Open Source mo) & Phidata Agents 
 
 -  Redis for fast in-memory doc-keyword lookup
 
@@ -71,26 +71,14 @@ This project leverages LLM-based agents, embeddings, reinforcement learning, and
 
 ---
 
-## 🧪 Running the Project
+# How to use the tool:
 
-🔧 Prerequisites:
+Running via Docker on the Server of the companies:
 
-- Redis running locally or via Docker
+- Clone the repository:
+    git clone https://github.com/shivasankaran18/HTF-M06
 
-- Python 3.9+
+- Now run the docker containers:
+    docker-compose up -d --build
 
-- Ollama / Hugging Face token configured for embeddings
-
----
-
-## 🛠 Install Dependencies
-
-<pre> pip install -r requirements.txt </pre>
-
-## 🚀 Run Main Pipeline
-
-<pre> python handle_user_query.py </pre>
-
-
-
-
+This how the tool will be used by the companies as it is so safe and secure to handle all those data locally in their servers.
