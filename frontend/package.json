@@ -7,7 +7,17 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format":"prettier --write .",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "cd frontend && prettier --write"
+    ],
+    "**/*.{json,md,css,scss,html,yml,yaml}": [
+      "cd frontend && prettier --write"
+    ]
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.3.0",
